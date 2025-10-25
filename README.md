@@ -10,16 +10,25 @@ This project is a re-do of the first programming tutorial that I did some years 
 
 The process is simple but not straight foward, this section is just a quick reference for myself of what commands that were used to setup this project.
     
-- After creating the repo in GitHub:
+After creating the repo in GitHub:
 ```
 git config --global user.name "User"
 git config --global user.email "user@email.com"
 
 gh auth login
 git init
-add README.md
-commit -m "first commit"
-branch -M main
+```
+
+Create README and make the first commit:
+```
+echo "# lazyfoo-sdl-tutorial" > README.md
+git add README.md
+git commit -m "first commit"
+```
+
+Set default branch name and connect to GitHub:
+```
+git branch -M main
 git remote add origin https://github.com/duiliokepel/lazyfoo-sdl-tutorial.git
 git push -u origin main
 ```
@@ -74,6 +83,68 @@ git push -u origin feature/branch-name
 ```
 git checkout main
 git pull
+```
+
+#### 6. Deleting branch
+
+```
 git branch -d feature/branch-name
 git push origin --delete feature/branch-name
+```
+
+### Other GitHub References
+
+#### Discard local changes and reset branch
+```
+git fetch origin
+git reset --hard origin/main
+
+```
+
+### View branches, blame, history
+
+#### Branch lists
+
+```bash
+# local branches
+git branch
+
+# remote branches (on GitHub)
+git branch -r
+
+# all (local + remote)
+git branch -a
+
+# show tracking/upstream info
+git branch -vv
+
+# refresh and prune deleted remote branches
+git fetch --prune
+```
+
+#### File blame / who changed what
+
+```bash
+git blame path/to/file.c
+# ignore whitespace-only changes:
+git blame -w path/to/file.c
+# blame a specific range:
+git blame -L 100,160 path/to/file.c
+```
+
+#### History browsing
+
+```bash
+# compact, decorated commit graph
+git log --oneline --graph --decorate --all
+
+# show patch for the last commit
+git show
+
+# compare two commits/branches
+git diff commit1 commit2
+git diff main feature/branch-name
+
+# see your local HEAD movements
+git reflog
 ```
