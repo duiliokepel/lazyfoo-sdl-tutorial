@@ -6,11 +6,11 @@ This project is a re-do of the first programming tutorial that I did some years 
 
 ## Setting up Git and  GitHub
 
-The process is simple but not straight foward, this section is just a quick reference for myself of what commands that were used to setup this project.
+### The initial setup in CLI
 
-1. The initial setup in CLI:
+The process is simple but not straight foward, this section is just a quick reference for myself of what commands that were used to setup this project.
     
-    This was done after creating the repo in GitHub.
+    - After creating the repo in GitHub:
     ```
     git config --global user.name "User"
     git config --global user.email "user@email.com"
@@ -26,9 +26,9 @@ The process is simple but not straight foward, this section is just a quick refe
 
 ---
 
-## Proper GitHub workflow
+### Proper GitHub workflow
    
-1. Creating branch locally:
+#### 1. Creating branch locally
     - Make sure it's up to date with main
     ```
     git checkout main
@@ -39,7 +39,7 @@ The process is simple but not straight foward, this section is just a quick refe
     git checkout -b feature/branch-name
     ```
 
-3. Work, diff and commit:
+#### 2. Work, diff and commit
     - See unstaged changes (what you’ve modified but not yet added)
     ```
     git --no-pager diff
@@ -59,21 +59,21 @@ The process is simple but not straight foward, this section is just a quick refe
     git commit -m "Commit Message"
     ```
 
-5. Push the branch to GitHub
+#### 3. Push the branch to GitHub
     ```
     git push -u origin feature/branch-name
     ```
 
-6. Create the Pull Request
+#### 4. Create the Pull Request
     - Go to your repository on GitHub.
     - GitHub will show a banner saying "Compare & pull request."
     - Click it --> review your changes --> click "Create pull request."
     - Once satisfied, click "Merge pull request."
 
-7. Clean up
+#### 5. Local files clean up
     ```
     git checkout main
     git pull
-    git branch -d feature/setup-sdl
-    git push origin --delete feature/setup-sdl
+    git branch -d feature/branch-name
+    git push origin --delete feature/branch-name
     ```
