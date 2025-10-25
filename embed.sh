@@ -124,16 +124,18 @@ cat > "$HEADER_PATH" <<EOF
 
 /* Embedded file: $RELATIVE_PATH */
 
-#include <stddef.h>
+#include <stdint.h>
 
-extern const unsigned char ${RENAMED_PREFIX}_start[];
-extern const unsigned char ${RENAMED_PREFIX}_end[];
+extern const uint8_t ${RENAMED_PREFIX}_start[];
+extern const uint8_t ${RENAMED_PREFIX}_end[];
+//extern const uint64_t ${RENAMED_PREFIX}_size[];
 
-// extern const unsigned int  ${RENAMED_PREFIX}_size;
 // Compute at runtime to avoid absolute-symbol relocations
-#define ${RENAMED_PREFIX}_size ((size_t)(${RENAMED_PREFIX}_end - ${RENAMED_PREFIX}_start))
+#define ${RENAMED_PREFIX}_size ((uint64_t)(${RENAMED_PREFIX}_end - ${RENAMED_PREFIX}_start))
 
 #endif /* $GUARD_NAME */
 EOF
+
+
 
 echo "Done."
