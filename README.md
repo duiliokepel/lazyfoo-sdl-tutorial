@@ -13,6 +13,29 @@ The goal is to rethink my workflow, and apply some standards of coding that are 
 - [GCC Command Option Summary](https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html)
 - [Embedding of binary data into programs](https://www.devever.net/~hl/incbin)
 
+
+---
+## Project Structure
+
+### Source directories
+
+- [`src/`](src/): contains all C sources files for multiple executables
+- [`assets/`](assets/): contains files, images, fonts and audio
+
+### Scripts
+
+- [`README.md`](README.md): this readme.
+- [`makefile`](makefile): single makefile for the entire project.
+- [`embed.sh`](embed.sh): script to generate binary blobs and header files.
+
+### Generated directories and files
+
+- [`bin/`](bin/): all the linked executables and shared libs.
+- [`build/`](build/): objects from compilation.
+- [`embed/`](embed/): binary blobs and header files.
+- [`deps/`](deps/): generated dependencies.
+- [`include/`](include/): generated headers for shared libs.
+
 ---
 ## Setting up Git and  GitHub
 
