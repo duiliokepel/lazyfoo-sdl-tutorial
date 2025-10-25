@@ -1,6 +1,18 @@
 # [Beginning Game Programming v2.0](https://lazyfoo.net/tutorials/SDL/)
 
-This project is a re-do of the first programming tutorial that I did some years ago by myself after learning C in college. I never finished the turial properly and been postponing learning git and using GitHub for some time. The goal is to rethink my workflow, and apply some standards of coding that are somewhat unusual for a project of this type.
+This project is a re-do of the first programming tutorial that I did some years ago by myself after learning C in college.\
+I never finished the turial properly and been postponing learning git and using GitHub for some time.\
+The goal is to rethink my workflow, and apply some standards of coding that are somewhat unusual for a project of this type.
+
+---
+
+## Links
+
+- [Beginning Game Programming v2.0](https://lazyfoo.net/tutorials/SDL/)
+- [The Power of Ten – Rules for Developing Safety Critical Code](https://spinroot.com/gerard/pdf/P10.pdf)
+- [Markdown - Basic writing and formatting syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [GCC Command Option Summary](https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html)
+- [Embedding of binary data into programs](https://www.devever.net/~hl/incbin)
 
 ---
 
