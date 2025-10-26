@@ -76,14 +76,22 @@ BIN_DIR = bin
 
 HELLOWORLD_OBJS = $(BUILD_DIR)/helloworld.o
 HELLOWORLD_LIBS =
+PROGRAMS += $(BIN_DIR)/helloworld
+ALL_OBJS += $(HELLOWORLD_OBJS)
 
 HELLOEMBED_OBJS = $(BUILD_DIR)/helloembed.o $(EMBED_DIR)/lorem-ipsum.txt.o
 HELLOEMBED_LIBS =
+PROGRAMS += $(BIN_DIR)/helloembed
+ALL_OBJS += $(HELLOEMBED_OBJS)
+
+01_first_window_OBJS = $(BUILD_DIR)/01_first_window.o
+01_first_window_LIBS = -lSDL2
+PROGRAMS += $(BIN_DIR)/01_first_window
+ALL_OBJS += $(01_first_window_OBJS)
 
 ################################################################
-# Master target list
+# Master target
 ################################################################
-PROGRAMS = $(BIN_DIR)/helloworld $(BIN_DIR)/helloembed
 
 all: $(PROGRAMS)
 
@@ -92,7 +100,7 @@ all: $(PROGRAMS)
 ################################################################
 
 # Generate dependencies for objects
-ALL_OBJS = $(sort $(HELLOWORLD_OBJS) $(HELLOEMBED_OBJS))
+ALL_OBJS := $(sort $(ALL_OBJS))
 DEPS := $(patsubst $(BUILD_DIR)/%.o,$(DEPS_DIR)/%.d, $(filter $(BUILD_DIR)/%.o,$(ALL_OBJS)))
 -include $(DEPS)
 
@@ -110,6 +118,10 @@ $(BIN_DIR)/helloworld: $(HELLOWORLD_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/helloembed: $(HELLOEMBED_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(HELLOEMBED_LIBS)
+
+$(BIN_DIR)/01_first_window: $(01_first_window_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(01_first_window_LIBS)
 
 ################################################################
 # Generic Build rules
