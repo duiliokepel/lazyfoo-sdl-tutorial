@@ -18,7 +18,8 @@ WARNING_FLAGS  = -Wall -Wextra -Wpedantic \
 	-Wpointer-arith -Wwrite-strings -Wvla \
 	-Waggregate-return -Wfloat-equal \
 	-Wswitch-enum -Wswitch-default -Wbad-function-cast \
-	-Wformat=2 -Wformat-security
+	-Wformat=2 -Wformat-security \
+	-Wunused-result
 
 ANALYZER_FLAGS = -fanalyzer -fstack-protector-strong -fno-common \
 	-fno-strict-overflow -fno-strict-aliasing
@@ -84,7 +85,7 @@ HELLOEMBED_LIBS =
 PROGRAMS += $(BIN_DIR)/helloembed
 ALL_OBJS += $(HELLOEMBED_OBJS)
 
-01_first_window_OBJS = $(BUILD_DIR)/01_first_window.o
+01_first_window_OBJS = $(BUILD_DIR)/01_first_window.o $(BUILD_DIR)/trace.o
 01_first_window_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/01_first_window
 ALL_OBJS += $(01_first_window_OBJS)
