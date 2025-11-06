@@ -15,6 +15,15 @@ The goal is to rethink my workflow, and apply some standards of coding that are 
 
 
 ---
+## Project Goals
+
+- [ ] Make all 55 exercises from Lazy Foo's SDL tutorial in C;
+- [ ] All assets should be embedded into the executables;
+- [ ] Comply with NASA's "Power of Ten" coding guidelines using tools and scripts;
+- [ ] Compile from Linux, cross-compile to Windows and Android;
+- [ ] Compile from Windows, cross-compile to Linux and Android;
+
+---
 ## Project Structure
 
 ### Source directories
