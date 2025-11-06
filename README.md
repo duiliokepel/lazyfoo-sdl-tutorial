@@ -4,15 +4,17 @@
 
 1. [Introduction](#introduction)
 2. [Project Goals](#project-goals)
-3. [GitHub workflow](#github-workflow)
-4. [References](#references)
+3. [Project Structure](#project-structure)
+5. [GitHub and Git setup](#github-and-git-setup)
+6. [GitHub workflow](#github-workflow)
+7. [References](#references)
 
 ---
 ## Introduction
 
-This project is a re-do of the first programming tutorial that I did some years ago by myself after learning C in college.\
-I never finished the turial properly and been postponing learning git and using GitHub for some time.\
-The goal is to rethink my workflow, and apply some standards of coding that are somewhat unusual for a project of this type.
+This project is a re-do of the first programming tutorial that I did some years ago after learning C in college.\
+The first time I tried, the tutorial wasn't finished completely, there was no version control and I didn't had much experience in what works for coding standards.\
+Since the tutorial is straight foward and it's main purpose is to demonstrate SDL's functionality, the majority of work here is about setting up Git, GitHub, and automating both the compilation process and coding guidelines compliance.
 
 ---
 ## Project Goals
@@ -46,11 +48,7 @@ The goal is to rethink my workflow, and apply some standards of coding that are 
 - [`include/`](include/): generated headers for shared libs.
 
 ---
-## GitHub workflow
-
-### The initial setup in CLI
-
-The process is simple but not straight foward as i'm not used to it, this section is just a quick reference for myself of what commands that were used to setup this project.
+## GitHub and Git setup
 
 After creating the repo in GitHub:
 ```bash
@@ -77,10 +75,9 @@ git push -u origin main
 ```
 
 ---
-
-### Proper GitHub workflow
+## GitHub workflow
    
-#### 1. Creating branch locally
+### 1. Creating branch locally
 ```bash
 # Make sure it's up to date with main
 git checkout main
@@ -90,8 +87,7 @@ git pull origin main
 git checkout -b feature/branch-name
 ```
 
-#### 2. Work, diff and commit
-
+### 2. Work, diff and commit
 ```bash
 # See unstaged changes (what you’ve modified but not yet added)
 git --no-pager diff
@@ -112,13 +108,13 @@ git push
 git push -u origin feature/branch-name
 ```
 
-#### 3. Create the Pull Request
+### 3. Create the Pull Request
 - Go to your repository on GitHub.
 - GitHub will show a banner saying "Compare & pull request."
 - Click it --> review your changes --> click "Create pull request."
 - Once satisfied, click "Merge pull request."
 
-#### 4. Clean up
+### 4. Clean up
 ```bash
 # Local Files clean up
 git checkout main
@@ -127,64 +123,6 @@ git pull
 # Deleting branch
 git branch -d feature/branch-name
 git push origin --delete feature/branch-name
-```
-
-### Other GitHub References
-
-#### Discard local changes and reset branch
-```bash
-git fetch origin
-git reset --hard origin/main
-
-```
-
-### View branches, blame, history
-
-#### Branch lists
-
-```bash
-# local branches
-git branch
-
-# remote branches (on GitHub)
-git branch -r
-
-# all (local + remote)
-git branch -a
-
-# show tracking/upstream info
-git branch -vv
-
-# refresh and prune deleted remote branches
-git fetch --prune
-```
-
-#### File blame / who changed what
-
-```bash
-git blame path/to/file.c
-# ignore whitespace-only changes:
-git blame -w path/to/file.c
-# blame a specific range:
-git blame -L 100,160 path/to/file.c
-```
-
-#### History browsing
-
-```bash
-# compact, decorated commit graph
-git log --oneline --graph --decorate --all
-
-# show patch for the last commit
-git show
-
-# compare two commits/branches
-
-git diff commit1 commit2
-git diff main feature/branch-name
-
-# see your local HEAD movements
-git reflog
 ```
 
 ---
