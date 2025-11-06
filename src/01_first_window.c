@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 
+#include "assert.h"
 #include "trace.h"
 
 int main(int argc, char** argv) {
@@ -26,7 +27,7 @@ int main(int argc, char** argv) {
 
     TRACE("Initializing SDL");
     result = SDL_Init(SDL_INIT_VIDEO);
-    if (result < 0) {
+    if (!C_ASSERT(result >= 0)) {
         TRACE("SDL_Init() error=[%s]", SDL_GetError());
         return -1;
     }
@@ -34,7 +35,7 @@ int main(int argc, char** argv) {
     TRACE("Creating window");
     window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                               SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (window == NULL) {
+    if (!C_ASSERT(window != NULL)) {
         TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());
         SDL_Quit();
         return -1;
@@ -45,7 +46,7 @@ int main(int argc, char** argv) {
 
     TRACE("Filling the surface with color");
     result = SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x80, 0x80));
-    if (result != 0) {
+    if (!C_ASSERT(result == 0)) {
         TRACE("SDL_FillRect() error=[%s]", SDL_GetError());
         SDL_Quit();
         return -1;
