@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     }
 
     TRACE("Creating window");
-    window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+    window = SDL_CreateWindow("SDL Tutorial 01 - Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                               SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (!C_ASSERT(window != NULL)) {
         TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());

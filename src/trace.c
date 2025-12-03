@@ -60,7 +60,6 @@ static void timestampISO8601(char *buffer, size_t bufferSize, const struct times
 
 static void timestampRelative(char *buffer, size_t bufferSize, const struct timespec *timestamp0,
                               const struct timespec *timestamp1) {
-    int offset = 0;
     struct timespec t0, t1, timediff;
     char sign = '+';
 

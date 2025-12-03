@@ -15,6 +15,42 @@ The goal is to rethink my workflow, and apply some standards of coding that are 
 
 
 ---
+## Todo:
+
+Automating Power of 10 Rules:
+- [ ] Rule 01 - Restrict all code to very simple control flow constructs
+- [ ] Rule 02 - All loops must have a fixed upper-bound.
+- [ ] Rule 03 - Do not use dynamic memory allocation after initialization
+- [ ] Rule 04 - No function should be longer than what can be printed on a single sheet of
+paper
+- [ ] Rule 05 - The assertion density of the code should average to a minimum of two
+assertions per function
+- [ ] Rule 06 - Data objects must be declared at the smallest possible level of scope.
+- [ ] Rule 07 - The return value of non-void functions must be checked by each calling
+function, and the validity of parameters must be checked inside each function.
+- [ ] Rule 08 - The use of the preprocessor must be limited to the inclusion of header files and
+simple macro definitions.
+- [ ] Rule 09 - The use of pointers should be restricted. Specifically, no more than one level of
+dereferencing is allowed.
+- [ ] Rule 10 - All code must be compiled, from the first day of development, with all
+compiler warnings enabled at the compiler’s most pedantic setting.
+
+
+Tutorial Development:
+- [ ] SDL Tutorial 01 - Hello SDL
+- [ ] SDL Tutorial 02 - Getting an Image on the Screen
+- [ ] SDL Tutorial 03 - Event Driven Programming
+- [ ] SDL Tutorial 04 - Key Presses
+- [ ] SDL Tutorial 05 - Optimized Surface Loading and Soft Stretching
+- [ ] SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats
+- [ ] SDL Tutorial 07 - Texture Loading and Rendering
+- [ ] SDL Tutorial 08 - Geometry Rendering
+- [ ] SDL Tutorial 09 - The Viewport
+- [ ] SDL Tutorial 10 - Color Keying
+
+
+
+---
 ## Project Structure
 
 ### Source directories

@@ -85,10 +85,10 @@ HELLOEMBED_LIBS =
 PROGRAMS += $(BIN_DIR)/helloembed
 ALL_OBJS += $(HELLOEMBED_OBJS)
 
-01_first_window_OBJS = $(BUILD_DIR)/01_first_window.o $(BUILD_DIR)/trace.o
-01_first_window_LIBS = -lSDL2
-PROGRAMS += $(BIN_DIR)/01_first_window
-ALL_OBJS += $(01_first_window_OBJS)
+01_hello_sdl_OBJS = $(BUILD_DIR)/01_hello_sdl.o $(BUILD_DIR)/trace.o
+01_hello_sdl_LIBS = -lSDL2
+PROGRAMS += $(BIN_DIR)/01_hello_sdl
+ALL_OBJS += $(01_hello_sdl_OBJS)
 
 ################################################################
 # Master target
@@ -120,9 +120,9 @@ $(BIN_DIR)/helloembed: $(HELLOEMBED_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(HELLOEMBED_LIBS)
 
-$(BIN_DIR)/01_first_window: $(01_first_window_OBJS) | $(BIN_DIR)
+$(BIN_DIR)/01_hello_sdl: $(01_hello_sdl_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
-	$(CC) $(LDFLAGS) -o $@ $^ $(01_first_window_LIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(01_hello_sdl_LIBS)
 
 ################################################################
 # Generic Build rules
