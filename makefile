@@ -18,7 +18,8 @@ WARNING_FLAGS  = -Wall -Wextra -Wpedantic \
 	-Wpointer-arith -Wwrite-strings -Wvla \
 	-Waggregate-return -Wfloat-equal \
 	-Wswitch-enum -Wswitch-default -Wbad-function-cast \
-	-Wformat=2 -Wformat-security
+	-Wformat=2 -Wformat-security \
+	-Wunused-result
 
 ANALYZER_FLAGS = -fanalyzer -fstack-protector-strong -fno-common \
 	-fno-strict-overflow -fno-strict-aliasing
@@ -76,14 +77,22 @@ BIN_DIR = bin
 
 HELLOWORLD_OBJS = $(BUILD_DIR)/helloworld.o
 HELLOWORLD_LIBS =
+PROGRAMS += $(BIN_DIR)/helloworld
+ALL_OBJS += $(HELLOWORLD_OBJS)
 
 HELLOEMBED_OBJS = $(BUILD_DIR)/helloembed.o $(EMBED_DIR)/lorem-ipsum.txt.o
 HELLOEMBED_LIBS =
+PROGRAMS += $(BIN_DIR)/helloembed
+ALL_OBJS += $(HELLOEMBED_OBJS)
+
+01_hello_sdl_OBJS = $(BUILD_DIR)/01_hello_sdl.o $(BUILD_DIR)/trace.o
+01_hello_sdl_LIBS = -lSDL2
+PROGRAMS += $(BIN_DIR)/01_hello_sdl
+ALL_OBJS += $(01_hello_sdl_OBJS)
 
 ################################################################
-# Master target list
+# Master target
 ################################################################
-PROGRAMS = $(BIN_DIR)/helloworld $(BIN_DIR)/helloembed
 
 all: $(PROGRAMS)
 
@@ -92,7 +101,7 @@ all: $(PROGRAMS)
 ################################################################
 
 # Generate dependencies for objects
-ALL_OBJS = $(sort $(HELLOWORLD_OBJS) $(HELLOEMBED_OBJS))
+ALL_OBJS := $(sort $(ALL_OBJS))
 DEPS := $(patsubst $(BUILD_DIR)/%.o,$(DEPS_DIR)/%.d, $(filter $(BUILD_DIR)/%.o,$(ALL_OBJS)))
 -include $(DEPS)
 
@@ -110,6 +119,10 @@ $(BIN_DIR)/helloworld: $(HELLOWORLD_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/helloembed: $(HELLOEMBED_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(HELLOEMBED_LIBS)
+
+$(BIN_DIR)/01_hello_sdl: $(01_hello_sdl_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(01_hello_sdl_LIBS)
 
 ################################################################
 # Generic Build rules
