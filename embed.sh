@@ -122,7 +122,7 @@ cat > "$HEADER_PATH" <<EOF
 #ifndef $GUARD_NAME
 #define $GUARD_NAME
 
-/* Embedded file: $RELATIVE_PATH */
+// Embedded file: $RELATIVE_PATH
 
 #include <stdint.h>
 
@@ -133,7 +133,7 @@ extern const uint8_t ${RENAMED_PREFIX}_end[];
 // Compute at runtime to avoid absolute-symbol relocations
 #define ${RENAMED_PREFIX}_size ((uint64_t)(${RENAMED_PREFIX}_end - ${RENAMED_PREFIX}_start))
 
-#endif /* $GUARD_NAME */
+#endif // $GUARD_NAME
 EOF
 
 
