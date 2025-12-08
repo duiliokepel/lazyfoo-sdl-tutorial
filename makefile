@@ -95,6 +95,11 @@ ALL_OBJS += $(01_hello_sdl_OBJS)
 PROGRAMS += $(BIN_DIR)/02_image_on_screen
 ALL_OBJS += $(02_image_on_screen_OBJS)
 
+03_event_driven_programming_OBJS = $(BUILD_DIR)/03_event_driven_programming.o $(BUILD_DIR)/trace.o $(EMBED_DIR)/press_x_to_close.bmp.o
+03_event_driven_programming_LIBS = -lSDL2
+PROGRAMS += $(BIN_DIR)/03_event_driven_programming
+ALL_OBJS += $(03_event_driven_programming_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -115,6 +120,8 @@ $(BUILD_DIR)/helloembed.o: $(EMBED_DIR)/lorem-ipsum.txt.h
 
 $(BUILD_DIR)/02_image_on_screen.o: $(EMBED_DIR)/hello_world.bmp.h
 
+$(BUILD_DIR)/03_event_driven_programming.o: $(EMBED_DIR)/press_x_to_close.bmp.h
+
 ################################################################
 # Targets Build rules
 ################################################################
@@ -134,6 +141,10 @@ $(BIN_DIR)/01_hello_sdl: $(01_hello_sdl_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/02_image_on_screen: $(02_image_on_screen_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(02_image_on_screen_LIBS)
+
+$(BIN_DIR)/03_event_driven_programming: $(03_event_driven_programming_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(03_event_driven_programming_LIBS)
 
 ################################################################
 # Generic Build rules

@@ -50,7 +50,7 @@ compiler warnings enabled at the compiler’s most pedantic setting.
 Tutorial Development:
 - [x] SDL Tutorial 01 - Hello SDL
 - [x] SDL Tutorial 02 - Getting an Image on the Screen
-- [ ] SDL Tutorial 03 - Event Driven Programming
+- [x] SDL Tutorial 03 - Event Driven Programming
 - [ ] SDL Tutorial 04 - Key Presses
 - [ ] SDL Tutorial 05 - Optimized Surface Loading and Soft Stretching
 - [ ] SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats
