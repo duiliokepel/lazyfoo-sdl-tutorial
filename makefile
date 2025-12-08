@@ -100,6 +100,13 @@ ALL_OBJS += $(02_image_on_screen_OBJS)
 PROGRAMS += $(BIN_DIR)/03_event_driven_programming
 ALL_OBJS += $(03_event_driven_programming_OBJS)
 
+04_key_presses_OBJS = $(BUILD_DIR)/04_key_presses.o $(BUILD_DIR)/trace.o $(EMBED_DIR)/press_default.bmp.o \
+											$(EMBED_DIR)/press_up.bmp.o $(EMBED_DIR)/press_down.bmp.o \
+											$(EMBED_DIR)/press_left.bmp.o $(EMBED_DIR)/press_right.bmp.o
+04_key_presses_LIBS = -lSDL2
+PROGRAMS += $(BIN_DIR)/04_key_presses
+ALL_OBJS += $(04_key_presses_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -121,6 +128,10 @@ $(BUILD_DIR)/helloembed.o: $(EMBED_DIR)/lorem-ipsum.txt.h
 $(BUILD_DIR)/02_image_on_screen.o: $(EMBED_DIR)/hello_world.bmp.h
 
 $(BUILD_DIR)/03_event_driven_programming.o: $(EMBED_DIR)/press_x_to_close.bmp.h
+
+$(BUILD_DIR)/04_key_presses.o: $(EMBED_DIR)/press_default.bmp.h \
+															 $(EMBED_DIR)/press_up.bmp.h $(EMBED_DIR)/press_down.bmp.h \
+															 $(EMBED_DIR)/press_left.bmp.h $(EMBED_DIR)/press_right.bmp.h
 
 ################################################################
 # Targets Build rules
@@ -145,6 +156,10 @@ $(BIN_DIR)/02_image_on_screen: $(02_image_on_screen_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/03_event_driven_programming: $(03_event_driven_programming_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(03_event_driven_programming_LIBS)
+
+$(BIN_DIR)/04_key_presses: $(04_key_presses_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(04_key_presses_LIBS)
 
 ################################################################
 # Generic Build rules
