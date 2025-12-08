@@ -51,7 +51,7 @@ Tutorial Development:
 - [x] SDL Tutorial 01 - Hello SDL
 - [x] SDL Tutorial 02 - Getting an Image on the Screen
 - [x] SDL Tutorial 03 - Event Driven Programming
-- [ ] SDL Tutorial 04 - Key Presses
+- [x] SDL Tutorial 04 - Key Presses
 - [ ] SDL Tutorial 05 - Optimized Surface Loading and Soft Stretching
 - [ ] SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats
 - [ ] SDL Tutorial 07 - Texture Loading and Rendering
@@ -113,19 +113,22 @@ git push -u origin main
 ---
 ## GitHub workflow
    
-### 1. Creating branch locally
+### 1. Creating branch
 ```bash
-# Make sure it's up to date with main
+# Update to main
 git checkout main
 git pull origin main
 
-# Create and switch to a new branch
+# Create and switch to a new branch locally
 git checkout -b feature/branch-name
+
+# Push the brach to the repository
+git push -u origin feature/branch-name
 ```
 
-### 2. Work, diff and commit
+### 2. After working on files
 ```bash
-# See unstaged changes (what you’ve modified but not yet added)
+# See unstaged changes (modified but not yet added)
 git --no-pager diff
 
 # Stage for Commit
@@ -133,15 +136,12 @@ git add .
 
 # See staged changes (what will be committed)
 git --no-pager diff --cached
-git --no-pager diff --staged
 
 # Commit
 git commit
-git commit -m "Commit Message"
 
 # Push the branch to GitHub
 git push
-git push -u origin feature/branch-name
 ```
 
 ### 3. Create the Pull Request
@@ -156,8 +156,10 @@ git push -u origin feature/branch-name
 git checkout main
 git pull
 
-# Deleting branch
+# Deleting branch locally
 git branch -d feature/branch-name
+
+# Deleting branch on repository
 git push origin --delete feature/branch-name
 ```
 

@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
         result = SDL_UpdateWindowSurface(window);
         if (result != 0) {
             TRACE("SDL_UpdateWindowSurface() error=[%s]", SDL_GetError());
+            SDL_DestroyWindow(window);
             SDL_Quit();
             return -1;
         }
@@ -75,7 +76,7 @@ int main(int argc, char** argv) {
         nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)}, NULL);
     }
 
-    TRACE("Detroying window");
+    TRACE("Destroying window");
     SDL_DestroyWindow(window);
 
     TRACE("Quitting SDL");

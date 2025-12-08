@@ -39,7 +39,7 @@ int init_SDL(SDL_Window** window, SDL_Surface** screen_surface) {
     TRACE("Initializing SDL");
     result = SDL_Init(SDL_INIT_VIDEO);
     if (!C_ASSERT(result >= 0)) {
-        TRACE("SDL_init_SDL() error=[%s]", SDL_GetError());
+        TRACE("SDL_Init() error=[%s]", SDL_GetError());
         return -1;
     }
 
@@ -75,7 +75,7 @@ int load_media(SDL_Surface** image_hello_world) {
         return -1;
     }
 
-    TRACE("Opening sream to embedded hello_world.bmp");
+    TRACE("Opening stream to embedded hello_world.bmp");
     image_RWops = SDL_RWFromConstMem(_embed_hello_world_bmp_start, (int)_embed_hello_world_bmp_size);
     if (!C_ASSERT(image_RWops != NULL)) {
         TRACE("SDL_RWFromConstMem() error=[%s]", SDL_GetError());
@@ -102,23 +102,23 @@ int load_media(SDL_Surface** image_hello_world) {
 
 void close_SDL(SDL_Window** window, SDL_Surface** image_hello_world) {
     if (!C_ASSERT(window != NULL)) {
-        TRACE("Invalidd parameter window");
+        TRACE("Invalid parameter window");
         return;
     }
     if (!C_ASSERT(image_hello_world != NULL)) {
-        TRACE("Invalidd parameter image_hello_world");
+        TRACE("Invalid parameter image_hello_world");
         return;
     }
 
     if (*image_hello_world != NULL) {
         TRACE("Freeing surface image_hello_world");
         SDL_FreeSurface(*image_hello_world);
-        image_hello_world = NULL;
+        *image_hello_world = NULL;
     }
     if (*window != NULL) {
-        TRACE("Detroying window");
+        TRACE("Destroying window");
         SDL_DestroyWindow(*window);
-        window = NULL;
+        *window = NULL;
     }
 
     TRACE("Quitting SDL");
@@ -172,7 +172,7 @@ int main(int argc, char** argv) {
         result = SDL_UpdateWindowSurface(window);
         if (result != 0) {
             TRACE("SDL_UpdateWindowSurface() error=[%s]", SDL_GetError());
-            SDL_Quit();
+            close_SDL(&window, &image_hello_world);
             return -1;
         }
 
