@@ -6,12 +6,12 @@
 #include <time.h>
 
 #include "assert.h"
-#include "embed/hello_world.bmp.h"
+#include "embed/press_x_to_close.bmp.h"
 #include "trace.h"
 
 int init_SDL(SDL_Window** window, SDL_Surface** screen_surface);
-int load_media(SDL_Surface** image_hello_world);
-void close_SDL(SDL_Window** window, SDL_Surface** image_hello_world);
+int load_media(SDL_Surface** press_x_to_close);
+void close_SDL(SDL_Window** window, SDL_Surface** press_x_to_close);
 
 int init_SDL(SDL_Window** window, SDL_Surface** screen_surface) {
     int result = 0;
@@ -44,7 +44,7 @@ int init_SDL(SDL_Window** window, SDL_Surface** screen_surface) {
     }
 
     TRACE("Creating window");
-    *window = SDL_CreateWindow("SDL Tutorial 02 - Getting an Image on the Screen", SDL_WINDOWPOS_UNDEFINED,
+    *window = SDL_CreateWindow("SDL Tutorial 03 - Event Driven Programming", SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (!C_ASSERT(*window != NULL)) {
         TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());
@@ -61,59 +61,59 @@ int init_SDL(SDL_Window** window, SDL_Surface** screen_surface) {
     return 0;
 }
 
-int load_media(SDL_Surface** image_hello_world) {
+int load_media(SDL_Surface** press_x_to_close) {
     int result = 0;
     SDL_RWops* image_RWops = NULL;
 
-    if (!C_ASSERT(image_hello_world != NULL)) {
-        TRACE("Invalid parameter image_hello_world");
+    if (!C_ASSERT(press_x_to_close != NULL)) {
+        TRACE("Invalid parameter press_x_to_close");
         return -1;
     }
 
-    if (!C_ASSERT(*image_hello_world == NULL)) {
-        TRACE("image_hello_world must be NULL before load_media");
+    if (!C_ASSERT(*press_x_to_close == NULL)) {
+        TRACE("press_x_to_close must be NULL before load_media");
         return -1;
     }
 
-    TRACE("Opening sream to embedded hello_world.bmp");
-    image_RWops = SDL_RWFromConstMem(_embed_hello_world_bmp_start, (int)_embed_hello_world_bmp_size);
+    TRACE("Opening sream to embedded press_x_to_close.bmp");
+    image_RWops = SDL_RWFromConstMem(_embed_press_x_to_close_bmp_start, (int)_embed_press_x_to_close_bmp_size);
     if (!C_ASSERT(image_RWops != NULL)) {
         TRACE("SDL_RWFromConstMem() error=[%s]", SDL_GetError());
         return -1;
     }
 
-    TRACE("Loading surface image_hello_world");
-    *image_hello_world = SDL_LoadBMP_RW(image_RWops, 0);
-    if (!C_ASSERT(*image_hello_world != NULL)) {
+    TRACE("Loading surface press_x_to_close");
+    *press_x_to_close = SDL_LoadBMP_RW(image_RWops, 0);
+    if (!C_ASSERT(*press_x_to_close != NULL)) {
         TRACE("SDL_LoadBMP_RW() error=[%s]", SDL_GetError());
         return -1;
     }
 
-    TRACE("Closing stream to embedded hello_world.bmp");
+    TRACE("Closing stream to embedded press_x_to_close.bmp");
     result = SDL_RWclose(image_RWops);
     if (!C_ASSERT(result == 0)) {
         TRACE("SDL_RWclose() error=[%s]", SDL_GetError());
         return -1;
     }
 
-    TRACE("Image width=[%d] height=[%d]", (*image_hello_world)->w, (*image_hello_world)->h);
+    TRACE("Image width=[%d] height=[%d]", (*press_x_to_close)->w, (*press_x_to_close)->h);
     return 0;
 }
 
-void close_SDL(SDL_Window** window, SDL_Surface** image_hello_world) {
+void close_SDL(SDL_Window** window, SDL_Surface** press_x_to_close) {
     if (!C_ASSERT(window != NULL)) {
         TRACE("Invalidd parameter window");
         return;
     }
-    if (!C_ASSERT(image_hello_world != NULL)) {
-        TRACE("Invalidd parameter image_hello_world");
+    if (!C_ASSERT(press_x_to_close != NULL)) {
+        TRACE("Invalidd parameter press_x_to_close");
         return;
     }
 
-    if (*image_hello_world != NULL) {
-        TRACE("Freeing surface image_hello_world");
-        SDL_FreeSurface(*image_hello_world);
-        image_hello_world = NULL;
+    if (*press_x_to_close != NULL) {
+        TRACE("Freeing surface press_x_to_close");
+        SDL_FreeSurface(*press_x_to_close);
+        press_x_to_close = NULL;
     }
     if (*window != NULL) {
         TRACE("Detroying window");
@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
     int result = 0;
     SDL_Window* window = NULL;
     SDL_Surface* screen_surface = NULL;
-    SDL_Surface* image_hello_world = NULL;
+    SDL_Surface* press_x_to_close = NULL;
     SDL_Event eventBuffer;
     bool quit = false;
 
@@ -146,23 +146,23 @@ int main(int argc, char** argv) {
     result = init_SDL(&window, &screen_surface);
     if (!C_ASSERT(result == 0)) {
         TRACE("init_SDL() error");
-        close_SDL(&window, &image_hello_world);
+        close_SDL(&window, &press_x_to_close);
         return -1;
     }
 
     TRACE("Loading media");
-    result = load_media(&image_hello_world);
+    result = load_media(&press_x_to_close);
     if (!C_ASSERT(result >= 0)) {
         TRACE("load_media() error");
-        close_SDL(&window, &image_hello_world);
+        close_SDL(&window, &press_x_to_close);
         return -1;
     }
 
     TRACE("Blitting surface to window");
-    result = SDL_BlitSurface(image_hello_world, NULL, screen_surface, NULL);
+    result = SDL_BlitSurface(press_x_to_close, NULL, screen_surface, NULL);
     if (!C_ASSERT(result == 0)) {
         TRACE("SDL_BlitSurface() error=[%s]", SDL_GetError());
-        close_SDL(&window, &image_hello_world);
+        close_SDL(&window, &press_x_to_close);
         return -1;
     }
 
@@ -179,7 +179,10 @@ int main(int argc, char** argv) {
         // Poll for currently pending events
         do {
             result = SDL_PollEvent(&eventBuffer);
-            if (result == 1 && eventBuffer.type == SDL_QUIT) {
+            if (result == 0) {
+                break;
+            }
+            if (eventBuffer.type == SDL_QUIT) {
                 TRACE("Quit");
                 quit = true;
             }
@@ -190,7 +193,7 @@ int main(int argc, char** argv) {
     }
 
     TRACE("Closing");
-    close_SDL(&window, &image_hello_world);
+    close_SDL(&window, &press_x_to_close);
 
     TRACE("end");
     return 0;
