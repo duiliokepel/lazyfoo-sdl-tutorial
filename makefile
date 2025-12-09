@@ -33,11 +33,11 @@ CFLAGS = $(LANGUAGE_FLAGS) $(WARNING_FLAGS) \
 	$(ANALYZER_FLAGS) $(OPTIMIZATION_FLAGS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS)
 
 LDFLAGS = \
-  -Wl,-z,noexecstack \
-  -Wl,-z,relro \
-  -Wl,-z,now \
-  -Wl,--as-needed \
-  -Wl,--gc-sections
+	-Wl,-z,noexecstack \
+	-Wl,-z,relro \
+	-Wl,-z,now \
+	-Wl,--as-needed \
+	-Wl,--gc-sections
 
 ################################################################
 # Pretty-print
@@ -46,7 +46,7 @@ LDFLAGS = \
 # Usage: $(call PRINT_RULE)
 PRINT_RULE = \
 	echo ""; \
-  echo "\#---------------------------------------------------------------"; \
+	echo "\#---------------------------------------------------------------"; \
 	echo "\#                   Target=[$@]"; \
 	if [ -n "$^" ]; then \
 	echo "\#            Prerequisites=[$^]"; \
@@ -90,28 +90,37 @@ ALL_OBJS += $(HELLOEMBED_OBJS)
 PROGRAMS += $(BIN_DIR)/01_hello_sdl
 ALL_OBJS += $(01_hello_sdl_OBJS)
 
-02_image_on_screen_OBJS = $(BUILD_DIR)/02_image_on_screen.o $(BUILD_DIR)/trace.o $(EMBED_DIR)/hello_world.bmp.o
+02_image_on_screen_OBJS = $(BUILD_DIR)/02_image_on_screen.o \
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/hello_world.bmp.o
 02_image_on_screen_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/02_image_on_screen
 ALL_OBJS += $(02_image_on_screen_OBJS)
 
-03_event_driven_programming_OBJS = $(BUILD_DIR)/03_event_driven_programming.o $(BUILD_DIR)/trace.o $(EMBED_DIR)/press_x_to_close.bmp.o
+03_event_driven_programming_OBJS = $(BUILD_DIR)/03_event_driven_programming.o \
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/press_x_to_close.bmp.o
 03_event_driven_programming_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/03_event_driven_programming
 ALL_OBJS += $(03_event_driven_programming_OBJS)
 
-04_key_presses_OBJS = $(BUILD_DIR)/04_key_presses.o $(BUILD_DIR)/trace.o $(EMBED_DIR)/press_default.bmp.o \
-											$(EMBED_DIR)/press_up.bmp.o $(EMBED_DIR)/press_down.bmp.o \
-											$(EMBED_DIR)/press_left.bmp.o $(EMBED_DIR)/press_right.bmp.o
+04_key_presses_OBJS = $(BUILD_DIR)/04_key_presses.o \
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/press_default.bmp.o \
+	$(EMBED_DIR)/press_up.bmp.o $(EMBED_DIR)/press_down.bmp.o \
+	$(EMBED_DIR)/press_left.bmp.o $(EMBED_DIR)/press_right.bmp.o
 04_key_presses_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/04_key_presses
 ALL_OBJS += $(04_key_presses_OBJS)
 
 05_optimized_surface_and_soft_stretching_OBJS = $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o \
-											$(BUILD_DIR)/trace.o $(EMBED_DIR)/stretching_to_window.bmp.o
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/stretching_to_window.bmp.o
 05_optimized_surface_and_soft_stretching_LIBS = -lSDL2 -lm
 PROGRAMS += $(BIN_DIR)/05_optimized_surface_and_soft_stretching
 ALL_OBJS += $(05_optimized_surface_and_soft_stretching_OBJS)
+
+06_extension_libraries_OBJS = $(BUILD_DIR)/06_extension_libraries.o \
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/png_loaded.png.o
+06_extension_libraries_LIBS = -lSDL2 -lSDL2_image -lm
+PROGRAMS += $(BIN_DIR)/06_extension_libraries
+ALL_OBJS += $(06_extension_libraries_OBJS)
 
 ################################################################
 # Master target
@@ -136,10 +145,12 @@ $(BUILD_DIR)/02_image_on_screen.o: $(EMBED_DIR)/hello_world.bmp.h
 $(BUILD_DIR)/03_event_driven_programming.o: $(EMBED_DIR)/press_x_to_close.bmp.h
 
 $(BUILD_DIR)/04_key_presses.o: $(EMBED_DIR)/press_default.bmp.h \
-															 $(EMBED_DIR)/press_up.bmp.h $(EMBED_DIR)/press_down.bmp.h \
-															 $(EMBED_DIR)/press_left.bmp.h $(EMBED_DIR)/press_right.bmp.h
+	 $(EMBED_DIR)/press_up.bmp.h $(EMBED_DIR)/press_down.bmp.h \
+	 $(EMBED_DIR)/press_left.bmp.h $(EMBED_DIR)/press_right.bmp.h
 
 $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o: $(EMBED_DIR)/stretching_to_window.bmp.h
+
+$(BUILD_DIR)/06_extension_libraries.o: $(EMBED_DIR)/png_loaded.png.h
 
 ################################################################
 # Targets Build rules
@@ -172,6 +183,10 @@ $(BIN_DIR)/04_key_presses: $(04_key_presses_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/05_optimized_surface_and_soft_stretching: $(05_optimized_surface_and_soft_stretching_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(05_optimized_surface_and_soft_stretching_LIBS)
+
+$(BIN_DIR)/06_extension_libraries: $(06_extension_libraries_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(06_extension_libraries_LIBS)
 
 ################################################################
 # Generic Build rules

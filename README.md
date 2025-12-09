@@ -52,8 +52,8 @@ Tutorial Development:
 - [x] SDL Tutorial 02 - Getting an Image on the Screen
 - [x] SDL Tutorial 03 - Event Driven Programming
 - [x] SDL Tutorial 04 - Key Presses
-- [ ] SDL Tutorial 05 - Optimized Surface Loading and Soft Stretching
-- [ ] SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats
+- [x] SDL Tutorial 05 - Optimized Surface Loading and Soft Stretching
+- [x] SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats
 - [ ] SDL Tutorial 07 - Texture Loading and Rendering
 - [ ] SDL Tutorial 08 - Geometry Rendering
 - [ ] SDL Tutorial 09 - The Viewport
