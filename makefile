@@ -107,6 +107,12 @@ ALL_OBJS += $(03_event_driven_programming_OBJS)
 PROGRAMS += $(BIN_DIR)/04_key_presses
 ALL_OBJS += $(04_key_presses_OBJS)
 
+05_optimized_surface_and_soft_stretching_OBJS = $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o \
+											$(BUILD_DIR)/trace.o $(EMBED_DIR)/stretching_to_window.bmp.o
+05_optimized_surface_and_soft_stretching_LIBS = -lSDL2 -lm
+PROGRAMS += $(BIN_DIR)/05_optimized_surface_and_soft_stretching
+ALL_OBJS += $(05_optimized_surface_and_soft_stretching_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -132,6 +138,8 @@ $(BUILD_DIR)/03_event_driven_programming.o: $(EMBED_DIR)/press_x_to_close.bmp.h
 $(BUILD_DIR)/04_key_presses.o: $(EMBED_DIR)/press_default.bmp.h \
 															 $(EMBED_DIR)/press_up.bmp.h $(EMBED_DIR)/press_down.bmp.h \
 															 $(EMBED_DIR)/press_left.bmp.h $(EMBED_DIR)/press_right.bmp.h
+
+$(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o: $(EMBED_DIR)/stretching_to_window.bmp.h
 
 ################################################################
 # Targets Build rules
@@ -160,6 +168,10 @@ $(BIN_DIR)/03_event_driven_programming: $(03_event_driven_programming_OBJS) | $(
 $(BIN_DIR)/04_key_presses: $(04_key_presses_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(04_key_presses_LIBS)
+
+$(BIN_DIR)/05_optimized_surface_and_soft_stretching: $(05_optimized_surface_and_soft_stretching_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(05_optimized_surface_and_soft_stretching_LIBS)
 
 ################################################################
 # Generic Build rules
