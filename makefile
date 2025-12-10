@@ -122,6 +122,12 @@ ALL_OBJS += $(05_optimized_surface_and_soft_stretching_OBJS)
 PROGRAMS += $(BIN_DIR)/06_extension_libraries
 ALL_OBJS += $(06_extension_libraries_OBJS)
 
+07_texture_loading_and_rendering_OBJS = $(BUILD_DIR)/07_texture_loading_and_rendering.o \
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/rendering_texture.png.o
+07_texture_loading_and_rendering_LIBS = -lSDL2 -lSDL2_image -lm
+PROGRAMS += $(BIN_DIR)/07_texture_loading_and_rendering
+ALL_OBJS += $(06_extension_libraries_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -145,12 +151,14 @@ $(BUILD_DIR)/02_image_on_screen.o: $(EMBED_DIR)/hello_world.bmp.h
 $(BUILD_DIR)/03_event_driven_programming.o: $(EMBED_DIR)/press_x_to_close.bmp.h
 
 $(BUILD_DIR)/04_key_presses.o: $(EMBED_DIR)/press_default.bmp.h \
-	 $(EMBED_DIR)/press_up.bmp.h $(EMBED_DIR)/press_down.bmp.h \
-	 $(EMBED_DIR)/press_left.bmp.h $(EMBED_DIR)/press_right.bmp.h
+	$(EMBED_DIR)/press_up.bmp.h $(EMBED_DIR)/press_down.bmp.h \
+	$(EMBED_DIR)/press_left.bmp.h $(EMBED_DIR)/press_right.bmp.h
 
 $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o: $(EMBED_DIR)/stretching_to_window.bmp.h
 
 $(BUILD_DIR)/06_extension_libraries.o: $(EMBED_DIR)/png_loaded.png.h
+
+$(BUILD_DIR)/07_texture_loading_and_rendering.o: $(EMBED_DIR)/rendering_texture.png.h
 
 ################################################################
 # Targets Build rules
@@ -187,6 +195,10 @@ $(BIN_DIR)/05_optimized_surface_and_soft_stretching: $(05_optimized_surface_and_
 $(BIN_DIR)/06_extension_libraries: $(06_extension_libraries_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(06_extension_libraries_LIBS)
+
+$(BIN_DIR)/07_texture_loading_and_rendering: $(07_texture_loading_and_rendering_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(07_texture_loading_and_rendering_LIBS)
 
 ################################################################
 # Generic Build rules
