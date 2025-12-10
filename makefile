@@ -2,7 +2,7 @@
 .SUFFIXES:
 
 #This specifies targets that are not files
-.PHONY: clean
+.PHONY: all clean
 
 ################################################################
 # Toolchain and flags
@@ -126,7 +126,12 @@ ALL_OBJS += $(06_extension_libraries_OBJS)
 	$(BUILD_DIR)/trace.o $(EMBED_DIR)/rendering_texture.png.o
 07_texture_loading_and_rendering_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/07_texture_loading_and_rendering
-ALL_OBJS += $(06_extension_libraries_OBJS)
+ALL_OBJS += $(07_texture_loading_and_rendering_OBJS)
+
+08_geometry_rendering_OBJS = $(BUILD_DIR)/08_geometry_rendering.o $(BUILD_DIR)/trace.o
+08_geometry_rendering_LIBS = -lSDL2 -lm
+PROGRAMS += $(BIN_DIR)/08_geometry_rendering
+ALL_OBJS += $(08_geometry_rendering_OBJS)
 
 ################################################################
 # Master target
@@ -199,6 +204,10 @@ $(BIN_DIR)/06_extension_libraries: $(06_extension_libraries_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/07_texture_loading_and_rendering: $(07_texture_loading_and_rendering_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(07_texture_loading_and_rendering_LIBS)
+
+$(BIN_DIR)/08_geometry_rendering: $(08_geometry_rendering_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(08_geometry_rendering_LIBS)
 
 ################################################################
 # Generic Build rules
