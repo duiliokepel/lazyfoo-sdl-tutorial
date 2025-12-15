@@ -111,6 +111,7 @@ SDL_Surface* load_img_embedded(const void* data, const size_t size, SDL_Surface*
     surface = IMG_Load_RW(rwops, 1);
     if (!C_ASSERT(surface != NULL)) {
         TRACE("IMG_Load_RW() error=[%s]", IMG_GetError());
+        SDL_RWclose(rwops);
         return NULL;
     }
 

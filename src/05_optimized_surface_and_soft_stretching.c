@@ -101,6 +101,7 @@ SDL_Surface* load_bmp_embedded(const void* data, const size_t size, SDL_Surface*
     surface = SDL_LoadBMP_RW(rwops, 1);
     if (!C_ASSERT(surface != NULL)) {
         TRACE("SDL_LoadBMP_RW() error=[%s]", SDL_GetError());
+        SDL_RWclose(rwops);
         return NULL;
     }
 
