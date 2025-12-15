@@ -2,16 +2,13 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <errno.h>
 #include <limits.h>
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <time.h>
 
 #include "assert.h"
-#include "embed/rendering_texture.png.h"
+#include "embed/viewport.png.h"
 #include "trace.h"
 
 struct sdl_system {
@@ -21,6 +18,9 @@ struct sdl_system {
 
 struct sdl_data {
     SDL_Texture* display_texture;
+    SDL_Rect top_left_viewport;
+    SDL_Rect top_right_viewport;
+    SDL_Rect bottom_viewport;
 };
 
 int init_SDL(struct sdl_system* system);
@@ -57,7 +57,7 @@ int init_SDL(struct sdl_system* system) {
     }
 
     TRACE("Creating window");
-    system->window = SDL_CreateWindow("SDL Tutorial 07 - Texture Loading and Rendering", SDL_WINDOWPOS_UNDEFINED,
+    system->window = SDL_CreateWindow("SDL Tutorial 09 - The Viewport", SDL_WINDOWPOS_UNDEFINED,
                                       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (!C_ASSERT(system->window != NULL)) {
         TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());
@@ -174,6 +174,9 @@ SDL_Texture* load_texture_embedded(const void* data, const size_t size, SDL_Rend
 }
 
 int load_media(struct sdl_data* data, struct sdl_system system) {
+    const int SCREEN_WIDTH = 640;
+    const int SCREEN_HEIGHT = 480;
+
     if (!C_ASSERT(data != NULL)) {
         TRACE("Invalid parameter data");
         return -1;
@@ -183,17 +186,34 @@ int load_media(struct sdl_data* data, struct sdl_system system) {
         return -1;
     }
 
-    TRACE("Loading texture rendering_texture");
+    TRACE("Loading texture viewport");
     if (!C_ASSERT(data->display_texture == NULL)) {
         TRACE("Texture must be NULL before calling load_media");
         return -1;
     }
-    data->display_texture =
-        load_texture_embedded(_embed_rendering_texture_png_start, _embed_rendering_texture_png_size, system.renderer);
+    data->display_texture = load_texture_embedded(_embed_viewport_png_start, _embed_viewport_png_size, system.renderer);
     if (!C_ASSERT(data->display_texture != NULL)) {
         TRACE("load_texture_embedded() error");
         return -1;
     }
+
+    // Top left corner viewport
+    data->top_left_viewport.x = 0;
+    data->top_left_viewport.y = 0;
+    data->top_left_viewport.w = SCREEN_WIDTH / 2;
+    data->top_left_viewport.h = SCREEN_HEIGHT / 2;
+
+    // Top right viewport
+    data->top_right_viewport.x = SCREEN_WIDTH / 2;
+    data->top_right_viewport.y = 0;
+    data->top_right_viewport.w = SCREEN_WIDTH / 2;
+    data->top_right_viewport.h = SCREEN_HEIGHT / 2;
+
+    // Bottom viewport
+    data->bottom_viewport.x = 0;
+    data->bottom_viewport.y = SCREEN_HEIGHT / 2;
+    data->bottom_viewport.w = SCREEN_WIDTH;
+    data->bottom_viewport.h = SCREEN_HEIGHT / 2;
 
     return 0;
 }
@@ -205,7 +225,7 @@ void free_media(struct sdl_data* data) {
     }
 
     if (data->display_texture != NULL) {
-        TRACE("Destroying texture rendering_texture");
+        TRACE("Destroying texture viewport");
         SDL_DestroyTexture(data->display_texture);
         data->display_texture = NULL;
     }
@@ -216,8 +236,6 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
     int result = 0;
     SDL_Event eventBuffer;
     bool quit = false;
-    SDL_Rect stretch_rect = {0, 0, 640, 480};
-    struct timespec start_time, current_time;
 
     if (!C_ASSERT(system.renderer != NULL)) {
         TRACE("Invalid renderer in main_loop");
@@ -225,13 +243,6 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
     }
     if (!C_ASSERT(data.display_texture != NULL)) {
         TRACE("Invalid display_texture in main_loop");
-        return -1;
-    }
-
-    result = clock_gettime(CLOCK_MONOTONIC, &start_time);
-    if (!C_ASSERT(result == 0)) {
-        int error = errno;
-        TRACE("clock_gettime() error=[%s]", strerror(error));
         return -1;
     }
 
@@ -244,39 +255,6 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
 
     TRACE("Main loop start");
     while (quit == false) {
-        double seconds = 0;
-
-        // Calculate rect size based on time
-        result = clock_gettime(CLOCK_MONOTONIC, &current_time);
-        if (!C_ASSERT(result == 0)) {
-            int error = errno;
-            TRACE("clock_gettime() error=[%s]", strerror(error));
-            return -1;
-        }
-        seconds = (double)(current_time.tv_sec - start_time.tv_sec) +
-                  ((double)(current_time.tv_nsec - start_time.tv_nsec) / 1000000000.0);
-        if (seconds < 0.5) {
-            double t = (seconds / 0.5);
-            stretch_rect.x = (int)lround(0.0 * t + 80.0 * (1.0 - t));
-            stretch_rect.y = (int)lround(0.0 * t + 60.0 * (1.0 - t));
-            stretch_rect.w = (int)lround(640.0 * t + 480.0 * (1.0 - t));
-            stretch_rect.h = (int)lround(480.0 * t + 360.0 * (1.0 - t));
-        } else if (seconds < 1.0) {
-            double t = ((seconds - 0.5) / 0.5);
-            stretch_rect.x = (int)lround(80.0 * t + 0.0 * (1.0 - t));
-            stretch_rect.y = (int)lround(60.0 * t + 0.0 * (1.0 - t));
-            stretch_rect.w = (int)lround(480.0 * t + 640.0 * (1.0 - t));
-            stretch_rect.h = (int)lround(360.0 * t + 480.0 * (1.0 - t));
-        } else {
-            result = clock_gettime(CLOCK_MONOTONIC, &start_time);
-            if (!C_ASSERT(result == 0)) {
-                int error = errno;
-                TRACE("clock_gettime() error=[%s]", strerror(error));
-                return -1;
-            }
-            continue;
-        }
-
         // Clear screen
         result = SDL_RenderClear(system.renderer);
         if (!C_ASSERT(result == 0)) {
@@ -284,8 +262,43 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
             return -1;
         }
 
-        // Render texture to screen
-        result = SDL_RenderCopy(system.renderer, data.display_texture, NULL, &stretch_rect);
+        // Top left corner viewport
+        result = SDL_RenderSetViewport(system.renderer, &data.top_left_viewport);
+        if (!C_ASSERT(result == 0)) {
+            TRACE("SDL_RenderSetViewport() error=[%s]", SDL_GetError());
+            return -1;
+        }
+
+        // Render texture to viewport
+        result = SDL_RenderCopy(system.renderer, data.display_texture, NULL, NULL);
+        if (!C_ASSERT(result == 0)) {
+            TRACE("SDL_RenderCopy() error=[%s]", SDL_GetError());
+            return -1;
+        }
+
+        // Top right viewport
+        result = SDL_RenderSetViewport(system.renderer, &data.top_right_viewport);
+        if (!C_ASSERT(result == 0)) {
+            TRACE("SDL_RenderSetViewport() error=[%s]", SDL_GetError());
+            return -1;
+        }
+
+        // Render texture to viewport
+        result = SDL_RenderCopy(system.renderer, data.display_texture, NULL, NULL);
+        if (!C_ASSERT(result == 0)) {
+            TRACE("SDL_RenderCopy() error=[%s]", SDL_GetError());
+            return -1;
+        }
+
+        // Bottom viewport
+        result = SDL_RenderSetViewport(system.renderer, &data.bottom_viewport);
+        if (!C_ASSERT(result == 0)) {
+            TRACE("SDL_RenderSetViewport() error=[%s]", SDL_GetError());
+            return -1;
+        }
+
+        // Render texture to viewport
+        result = SDL_RenderCopy(system.renderer, data.display_texture, NULL, NULL);
         if (!C_ASSERT(result == 0)) {
             TRACE("SDL_RenderCopy() error=[%s]", SDL_GetError());
             return -1;

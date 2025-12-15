@@ -24,7 +24,7 @@ WARNING_FLAGS  = -Wall -Wextra -Wpedantic \
 ANALYZER_FLAGS = -fanalyzer -fstack-protector-strong -fno-common \
 	-fno-strict-overflow -fno-strict-aliasing
 
-OPTIMIZATION_FLAGS = -O3 -ffunction-sections -fdata-sections
+OPTIMIZATION_FLAGS = -O3 -ffunction-sections -fdata-sections -fno-omit-frame-pointer
 DEBUG_FLAGS        = -g3 -ggdb
 
 INCLUDE_FLAGS = -I./
@@ -133,6 +133,12 @@ ALL_OBJS += $(07_texture_loading_and_rendering_OBJS)
 PROGRAMS += $(BIN_DIR)/08_geometry_rendering
 ALL_OBJS += $(08_geometry_rendering_OBJS)
 
+09_the_viewport_OBJS = $(BUILD_DIR)/09_the_viewport.o \
+	$(BUILD_DIR)/trace.o $(EMBED_DIR)/viewport.png.o
+09_the_viewport_LIBS = -lSDL2 -lSDL2_image -lm
+PROGRAMS += $(BIN_DIR)/09_the_viewport
+ALL_OBJS += $(09_the_viewport_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -164,6 +170,8 @@ $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o: $(EMBED_DIR)/stretching
 $(BUILD_DIR)/06_extension_libraries.o: $(EMBED_DIR)/png_loaded.png.h
 
 $(BUILD_DIR)/07_texture_loading_and_rendering.o: $(EMBED_DIR)/rendering_texture.png.h
+
+$(BUILD_DIR)/09_the_viewport.o: $(EMBED_DIR)/viewport.png.h
 
 ################################################################
 # Targets Build rules
@@ -208,6 +216,10 @@ $(BIN_DIR)/07_texture_loading_and_rendering: $(07_texture_loading_and_rendering_
 $(BIN_DIR)/08_geometry_rendering: $(08_geometry_rendering_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(08_geometry_rendering_LIBS)
+
+$(BIN_DIR)/09_the_viewport: $(09_the_viewport_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(09_the_viewport_LIBS)
 
 ################################################################
 # Generic Build rules
