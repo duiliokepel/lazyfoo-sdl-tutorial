@@ -85,13 +85,13 @@ HELLOEMBED_LIBS =
 PROGRAMS += $(BIN_DIR)/helloembed
 ALL_OBJS += $(HELLOEMBED_OBJS)
 
-01_hello_sdl_OBJS = $(BUILD_DIR)/01_hello_sdl.o $(BUILD_DIR)/trace.o
+01_hello_sdl_OBJS = $(BUILD_DIR)/01_hello_sdl.o $(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o
 01_hello_sdl_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/01_hello_sdl
 ALL_OBJS += $(01_hello_sdl_OBJS)
 
 02_image_on_screen_OBJS = $(BUILD_DIR)/02_image_on_screen.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/hello_world.bmp.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/hello_world.bmp.o
 02_image_on_screen_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/02_image_on_screen
 ALL_OBJS += $(02_image_on_screen_OBJS)
