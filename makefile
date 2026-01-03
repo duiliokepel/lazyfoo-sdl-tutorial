@@ -103,7 +103,7 @@ PROGRAMS += $(BIN_DIR)/03_event_driven_programming
 ALL_OBJS += $(03_event_driven_programming_OBJS)
 
 04_key_presses_OBJS = $(BUILD_DIR)/04_key_presses.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/press_default.bmp.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/press_default.bmp.o \
 	$(EMBED_DIR)/press_up.bmp.o $(EMBED_DIR)/press_down.bmp.o \
 	$(EMBED_DIR)/press_left.bmp.o $(EMBED_DIR)/press_right.bmp.o
 04_key_presses_LIBS = -lSDL2

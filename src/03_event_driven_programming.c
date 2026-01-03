@@ -45,7 +45,8 @@ int init_SDL(struct sdl_system* system) {
 
     TRACE("Getting window surface");
     system->screen_surface = SDL_GetWindowSurface(system->window);
-    ASSERT(system->screen_surface != NULL, close_SDL(system); return -1;, "SDL_GetWindowSurface error=[%s]", SDL_GetError());
+    ASSERT(system->screen_surface != NULL, close_SDL(system); return -1;
+           , "SDL_GetWindowSurface error=[%s]", SDL_GetError());
 
     return 0;
 }
