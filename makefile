@@ -111,7 +111,7 @@ PROGRAMS += $(BIN_DIR)/04_key_presses
 ALL_OBJS += $(04_key_presses_OBJS)
 
 05_optimized_surface_and_soft_stretching_OBJS = $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/stretching_to_window.bmp.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/stretching_to_window.bmp.o
 05_optimized_surface_and_soft_stretching_LIBS = -lSDL2 -lm
 PROGRAMS += $(BIN_DIR)/05_optimized_surface_and_soft_stretching
 ALL_OBJS += $(05_optimized_surface_and_soft_stretching_OBJS)
