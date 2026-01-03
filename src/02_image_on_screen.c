@@ -25,7 +25,7 @@ int load_media(struct sdl_data* data);
 void free_media(struct sdl_data* data);
 
 int init_SDL(struct sdl_system* system) {
-    int return_value = 0;
+    int return_code = 0;
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
 
@@ -35,17 +35,17 @@ int init_SDL(struct sdl_system* system) {
            , "Argument system->screen_surface must be NULL before initialization");
 
     TRACE("Initializing SDL");
-    return_value = SDL_Init(SDL_INIT_VIDEO);
-    ASSERT(return_value == 0, return -1;, "SDL_Init error=[%s]", SDL_GetError());
+    return_code = SDL_Init(SDL_INIT_VIDEO);
+    ASSERT(return_code == 0, return -1;, "SDL_Init error=[%s]", SDL_GetError());
 
     TRACE("Creating window");
     system->window = SDL_CreateWindow("SDL Tutorial 02 - Getting an Image on the Screen", SDL_WINDOWPOS_UNDEFINED,
                                       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    ASSERT(system->window, return -1;, "SDL_CreateWindow error=[%s]", SDL_GetError());
+    ASSERT(system->window != NULL, SDL_Quit(); return -1;, "SDL_CreateWindow error=[%s]", SDL_GetError());
 
     TRACE("Getting window surface");
     system->screen_surface = SDL_GetWindowSurface(system->window);
-    ASSERT(system->screen_surface, return -1;, "SDL_GetWindowSurface error=[%s]", SDL_GetError());
+    ASSERT(system->screen_surface != NULL, close_SDL(system); return -1;, "SDL_GetWindowSurface error=[%s]", SDL_GetError());
 
     return 0;
 }
@@ -54,7 +54,6 @@ void close_SDL(struct sdl_system* system) {
     ASSERT(system != NULL, return;, "Argument system must not be NULL");
 
     if (system->screen_surface != NULL) {
-        TRACE("Dereferencing screen_surface");
         system->screen_surface = NULL;
     }
 
@@ -70,7 +69,7 @@ void close_SDL(struct sdl_system* system) {
 }
 
 int load_media(struct sdl_data* data) {
-    int return_value = 0;
+    int return_code = 0;
     SDL_RWops* image_RWops = NULL;
 
     ASSERT(data != NULL, return -1;, "Argument data must not be NULL");
@@ -87,8 +86,9 @@ int load_media(struct sdl_data* data) {
            , "SDL_LoadBMP_RW error=[%s]", SDL_GetError());
 
     TRACE("Closing stream to embedded hello_world.bmp");
-    return_value = SDL_RWclose(image_RWops);
-    ASSERT(return_value == 0, return -1;, "SDL_RWclose error=[%s]", SDL_GetError());
+    return_code = SDL_RWclose(image_RWops);
+    ASSERT(return_code == 0, SDL_FreeSurface(data->image_hello_world); data->image_hello_world = NULL; return -1;
+           , "SDL_RWclose error=[%s]", SDL_GetError());
 
     TRACE("Image width=[%d] height=[%d]", data->image_hello_world->w, data->image_hello_world->h);
     return 0;
@@ -107,7 +107,7 @@ void free_media(struct sdl_data* data) {
 }
 
 int main(int argc, char** argv) {
-    int return_value = 0;
+    int return_code = 0;
     struct sdl_system system = {0};
     struct sdl_data data = {0};
     SDL_Event event_buffer;
@@ -122,33 +122,33 @@ int main(int argc, char** argv) {
     }
 
     TRACE("Initializing");
-    return_value = init_SDL(&system);
-    ASSERT(return_value == 0, close_SDL(&system); return -1;, "init_SDL error");
+    return_code = init_SDL(&system);
+    ASSERT(return_code == 0, close_SDL(&system); return -1;, "init_SDL error");
 
     TRACE("Loading media");
-    return_value = load_media(&data);
-    ASSERT(return_value == 0, free_media(&data); close_SDL(&system); return -1;, "load_media error");
+    return_code = load_media(&data);
+    ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;, "load_media error");
 
     TRACE("Blitting surface to window");
-    return_value = SDL_BlitSurface(data.image_hello_world, NULL, system.screen_surface, NULL);
-    ASSERT(return_value == 0, free_media(&data); close_SDL(&system); return -1;
+    return_code = SDL_BlitSurface(data.image_hello_world, NULL, system.screen_surface, NULL);
+    ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;
            , "SDL_BlitSurface error=[%s]", SDL_GetError());
 
     TRACE("Main loop start");
     while (quit == false) {
         // Update the surface
-        return_value = SDL_UpdateWindowSurface(system.window);
-        ASSERT(return_value == 0, free_media(&data); close_SDL(&system); return -1;
+        return_code = SDL_UpdateWindowSurface(system.window);
+        ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;
                , "SDL_UpdateWindowSurface error=[%s]", SDL_GetError());
 
         // Poll for currently pending events
         do {
-            return_value = SDL_PollEvent(&event_buffer);
-            if (return_value == 1 && event_buffer.type == SDL_QUIT) {
+            return_code = SDL_PollEvent(&event_buffer);
+            if (return_code == 1 && event_buffer.type == SDL_QUIT) {
                 TRACE("Quit");
                 quit = true;
             }
-        } while (return_value == 1);
+        } while (return_code == 1);
 
         // sleep
         nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)}, NULL);

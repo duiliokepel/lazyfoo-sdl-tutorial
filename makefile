@@ -97,7 +97,7 @@ PROGRAMS += $(BIN_DIR)/02_image_on_screen
 ALL_OBJS += $(02_image_on_screen_OBJS)
 
 03_event_driven_programming_OBJS = $(BUILD_DIR)/03_event_driven_programming.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/press_x_to_close.bmp.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/press_x_to_close.bmp.o
 03_event_driven_programming_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/03_event_driven_programming
 ALL_OBJS += $(03_event_driven_programming_OBJS)
