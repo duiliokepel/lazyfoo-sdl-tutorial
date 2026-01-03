@@ -117,7 +117,7 @@ PROGRAMS += $(BIN_DIR)/05_optimized_surface_and_soft_stretching
 ALL_OBJS += $(05_optimized_surface_and_soft_stretching_OBJS)
 
 06_extension_libraries_OBJS = $(BUILD_DIR)/06_extension_libraries.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/png_loaded.png.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/png_loaded.png.o
 06_extension_libraries_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/06_extension_libraries
 ALL_OBJS += $(06_extension_libraries_OBJS)
