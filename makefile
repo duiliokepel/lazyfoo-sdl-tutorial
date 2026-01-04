@@ -123,7 +123,7 @@ PROGRAMS += $(BIN_DIR)/06_extension_libraries
 ALL_OBJS += $(06_extension_libraries_OBJS)
 
 07_texture_loading_and_rendering_OBJS = $(BUILD_DIR)/07_texture_loading_and_rendering.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/rendering_texture.png.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/rendering_texture.png.o
 07_texture_loading_and_rendering_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/07_texture_loading_and_rendering
 ALL_OBJS += $(07_texture_loading_and_rendering_OBJS)

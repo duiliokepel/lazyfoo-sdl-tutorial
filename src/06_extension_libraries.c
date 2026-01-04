@@ -48,7 +48,7 @@ int init_SDL(struct sdl_system* system) {
 
     TRACE("Initializing SDL_image");
     return_code = IMG_Init(img_flags);
-    ASSERT((return_code & img_flags) == img_flags, SDL_Quit(); return -1;, "IMG_Init error=[%s]", IMG_GetError());
+    ASSERT((return_code & img_flags) == img_flags, IMG_Quit(); SDL_Quit(); return -1;, "IMG_Init error=[%s]", IMG_GetError());
 
     TRACE("Creating window");
     system->window = SDL_CreateWindow("SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats",
@@ -124,6 +124,7 @@ int load_media(struct sdl_data* data) {
     ASSERT(data != NULL, return -1;, "Argument data must not be NULL");
 
     TRACE("Loading surface png_image");
+    ASSERT(data->png_image == NULL, return -1;, "Surface must be NULL before calling load_media");
     data->png_image = load_img_embedded(_embed_png_loaded_png_start, _embed_png_loaded_png_size);
     ASSERT(data->png_image != NULL, return -1;, "load_img_embedded error");
 
