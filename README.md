@@ -58,6 +58,51 @@ Tutorial Development:
 - [x] SDL Tutorial 08 - Geometry Rendering
 - [x] SDL Tutorial 09 - The Viewport
 - [ ] SDL Tutorial 10 - Color Keying
+- [ ] SDL Tutorial 11 - Clip Rendering and Sprite Sheets
+- [ ] SDL Tutorial 12 - Color Modulation
+- [ ] SDL Tutorial 13 - Alpha Blending
+- [ ] SDL Tutorial 14 - Animated Sprites and VSync
+- [ ] SDL Tutorial 15 - Rotation and Flipping
+- [ ] SDL Tutorial 16 - True Type Fonts
+- [ ] SDL Tutorial 17 - Mouse Events
+- [ ] SDL Tutorial 18 - Key States
+- [ ] SDL Tutorial 19 - Gamepads and Joysticks
+- [ ] SDL Tutorial 20 - Force Feedback
+- [ ] SDL Tutorial 21 - Sound Effects and Music
+- [ ] SDL Tutorial 22 - Timing
+- [ ] SDL Tutorial 23 - Advanced Timers
+- [ ] SDL Tutorial 24 - Calculating Frame Rate
+- [ ] SDL Tutorial 25 - Capping Frame Rate
+- [ ] SDL Tutorial 26 - Motion
+- [ ] SDL Tutorial 27 - Collision Detection
+- [ ] SDL Tutorial 28 - Per-Pixel Collision Detection
+- [ ] SDL Tutorial 29 - Circular Collision Detection
+- [ ] SDL Tutorial 30 - Scrolling
+- [ ] SDL Tutorial 31 - Scrolling Backgrounds
+- [ ] SDL Tutorial 32 - Text Input And Clipboard Handling
+- [ ] SDL Tutorial 33 - File Reading and Writing
+- [ ] SDL Tutorial 34 - Audio Recording
+- [ ] SDL Tutorial 35 - Window Events
+- [ ] SDL Tutorial 36 - Multiple Windows
+- [ ] SDL Tutorial 37 - Multiple Displays
+- [ ] SDL Tutorial 38 - Particle Engines
+- [ ] SDL Tutorial 39 - Tiling
+- [ ] SDL Tutorial 40 - Texture Manipulation
+- [ ] SDL Tutorial 41 - Bitmap Fonts
+- [ ] SDL Tutorial 42 - Texture Streaming
+- [ ] SDL Tutorial 43 - Render to Texture
+- [ ] SDL Tutorial 44 - Frame Independent Movement
+- [ ] SDL Tutorial 45 - Timer Callbacks
+- [ ] SDL Tutorial 46 - Multithreading
+- [ ] SDL Tutorial 47 - Semaphores
+- [ ] SDL Tutorial 48 - Atomic Operations
+- [ ] SDL Tutorial 49 - Mutexes and Conditions
+- [ ] SDL Tutorial 50 - SDL and OpenGL 2
+- [ ] SDL Tutorial 51 - SDL and Modern OpenGL
+- [ ] SDL Tutorial 52 - Hello Mobile
+- [ ] SDL Tutorial 53 - Extensions and Changing Orientation
+- [ ] SDL Tutorial 54 - Touches
+- [ ] SDL Tutorial 55 - Multi Touch
 
 ---
 ## Project Structure
