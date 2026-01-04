@@ -56,7 +56,7 @@ Tutorial Development:
 - [x] SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats
 - [x] SDL Tutorial 07 - Texture Loading and Rendering
 - [x] SDL Tutorial 08 - Geometry Rendering
-- [ ] SDL Tutorial 09 - The Viewport
+- [x] SDL Tutorial 09 - The Viewport
 - [ ] SDL Tutorial 10 - Color Keying
 
 ---
