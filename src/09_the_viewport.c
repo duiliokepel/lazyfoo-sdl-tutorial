@@ -17,7 +17,7 @@ struct sdl_system {
 };
 
 struct sdl_data {
-    SDL_Texture* display_texture;
+    SDL_Texture* viewport_texture;
     SDL_Rect top_left_viewport;
     SDL_Rect top_right_viewport;
     SDL_Rect bottom_viewport;
@@ -30,7 +30,7 @@ SDL_Texture* load_texture_embedded(const void* img_data, const size_t size, SDL_
 int load_media(struct sdl_data* data, SDL_Renderer* renderer);
 void free_media(struct sdl_data* data);
 
-int main_loop(struct sdl_system system, struct sdl_data data);
+int main_loop(const struct sdl_system system, const struct sdl_data data);
 int main(int argc, char** argv);
 
 int init_SDL(struct sdl_system* system) {
@@ -134,9 +134,9 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     ASSERT(renderer != NULL, return -1;, "Argument renderer must not be NULL");
 
     TRACE("Loading texture viewport");
-    ASSERT(data->display_texture == NULL, return -1;, "Surface must be NULL before calling load_media");
-    data->display_texture = load_texture_embedded(_embed_viewport_png_start, _embed_viewport_png_size, renderer);
-    ASSERT(data->display_texture != NULL, return -1;, "load_texture_embedded error");
+    ASSERT(data->viewport_texture == NULL, return -1;, "Surface must be NULL before calling load_media");
+    data->viewport_texture = load_texture_embedded(_embed_viewport_png_start, _embed_viewport_png_size, renderer);
+    ASSERT(data->viewport_texture != NULL, return -1;, "load_texture_embedded error");
 
     // Top left corner viewport
     data->top_left_viewport.x = 0;
@@ -162,21 +162,21 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
 void free_media(struct sdl_data* data) {
     ASSERT(data != NULL, return;, "Argument data must not be NULL");
 
-    if (data->display_texture != NULL) {
-        TRACE("Destroying texture rendering_texture");
-        SDL_DestroyTexture(data->display_texture);
-        data->display_texture = NULL;
+    if (data->viewport_texture != NULL) {
+        TRACE("Destroying texture viewport");
+        SDL_DestroyTexture(data->viewport_texture);
+        data->viewport_texture = NULL;
     }
     return;
 }
 
-int main_loop(struct sdl_system system, struct sdl_data data) {
+int main_loop(const struct sdl_system system, const struct sdl_data data) {
     int return_code = 0;
     SDL_Event event_buffer;
     bool quit = false;
 
     ASSERT(system.renderer != NULL, return -1;, "Argument system.renderer must not be NULL");
-    ASSERT(data.display_texture != NULL, return -1;, "Argument data.display_texture must not be NULL");
+    ASSERT(data.viewport_texture != NULL, return -1;, "Argument data.viewport_texture must not be NULL");
 
     // Set renderer color
     return_code = SDL_SetRenderDrawColor(system.renderer, 0x00, 0x80, 0x80, 0xFF);
@@ -193,7 +193,7 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
         ASSERT(return_code == 0, return -1;, "SDL_RenderSetViewport error=[%s]", SDL_GetError());
 
         // Render texture to viewport
-        return_code = SDL_RenderCopy(system.renderer, data.display_texture, NULL, NULL);
+        return_code = SDL_RenderCopy(system.renderer, data.viewport_texture, NULL, NULL);
         ASSERT(return_code == 0, return -1;, "SDL_RenderCopy error=[%s]", SDL_GetError());
 
         // Top right viewport
@@ -201,7 +201,7 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
         ASSERT(return_code == 0, return -1;, "SDL_RenderSetViewport error=[%s]", SDL_GetError());
 
         // Render texture to viewport
-        return_code = SDL_RenderCopy(system.renderer, data.display_texture, NULL, NULL);
+        return_code = SDL_RenderCopy(system.renderer, data.viewport_texture, NULL, NULL);
         ASSERT(return_code == 0, return -1;, "SDL_RenderCopy error=[%s]", SDL_GetError());
 
         // Bottom viewport
@@ -209,7 +209,7 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
         ASSERT(return_code == 0, return -1;, "SDL_RenderSetViewport error=[%s]", SDL_GetError());
 
         // Render texture to viewport
-        return_code = SDL_RenderCopy(system.renderer, data.display_texture, NULL, NULL);
+        return_code = SDL_RenderCopy(system.renderer, data.viewport_texture, NULL, NULL);
         ASSERT(return_code == 0, return -1;, "SDL_RenderCopy error=[%s]", SDL_GetError());
 
         // Update screen
