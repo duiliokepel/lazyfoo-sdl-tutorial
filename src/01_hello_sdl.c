@@ -9,12 +9,12 @@
 #include "trace.h"
 
 int main(int argc, char** argv) {
-    int result = 0;
+    int return_code = 0;
     SDL_Window* window = NULL;
-    SDL_Surface* screenSurface = NULL;
+    SDL_Surface* screen_surface = NULL;
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
-    SDL_Event eventBuffer;
+    SDL_Event event_buffer;
     bool quit = false;
 
     TRACE("start");
@@ -26,51 +26,39 @@ int main(int argc, char** argv) {
     }
 
     TRACE("Initializing SDL");
-    result = SDL_Init(SDL_INIT_VIDEO);
-    if (!C_ASSERT(result >= 0)) {
-        TRACE("SDL_Init() error=[%s]", SDL_GetError());
-        return -1;
-    }
+    return_code = SDL_Init(SDL_INIT_VIDEO);
+    ASSERT(return_code == 0, return -1;, "SDL_Init() error=[%s]", SDL_GetError());
 
     TRACE("Creating window");
     window = SDL_CreateWindow("SDL Tutorial 01 - Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                               SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (!C_ASSERT(window != NULL)) {
-        TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());
-        SDL_Quit();
-        return -1;
-    }
+    ASSERT(window != NULL, SDL_Quit(); return -1;, "SDL_CreateWindow() error=[%s]", SDL_GetError());
 
     TRACE("Getting window surface");
-    screenSurface = SDL_GetWindowSurface(window);
+    screen_surface = SDL_GetWindowSurface(window);
+    ASSERT(screen_surface != NULL, SDL_DestroyWindow(window); SDL_Quit(); return -1;
+           , "SDL_GetWindowSurface() error=[%s]", SDL_GetError());
 
     TRACE("Filling the surface with color");
-    result = SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x80, 0x80));
-    if (!C_ASSERT(result == 0)) {
-        TRACE("SDL_FillRect() error=[%s]", SDL_GetError());
-        SDL_Quit();
-        return -1;
-    }
+    return_code = SDL_FillRect(screen_surface, NULL, SDL_MapRGB(screen_surface->format, 0x00, 0x80, 0x80));
+    ASSERT(return_code == 0, SDL_DestroyWindow(window); SDL_Quit(); return -1;
+           , "SDL_FillRect() error=[%s]", SDL_GetError());
 
     TRACE("Main loop start");
     while (quit == false) {
         // Update the surface
-        result = SDL_UpdateWindowSurface(window);
-        if (result != 0) {
-            TRACE("SDL_UpdateWindowSurface() error=[%s]", SDL_GetError());
-            SDL_DestroyWindow(window);
-            SDL_Quit();
-            return -1;
-        }
+        return_code = SDL_UpdateWindowSurface(window);
+        ASSERT(return_code == 0, SDL_DestroyWindow(window); SDL_Quit(); return -1;
+               , "SDL_UpdateWindowSurface() error=[%s]", SDL_GetError());
 
         // Poll for currently pending events
         do {
-            result = SDL_PollEvent(&eventBuffer);
-            if (result == 1 && eventBuffer.type == SDL_QUIT) {
+            return_code = SDL_PollEvent(&event_buffer);
+            if (return_code == 1 && event_buffer.type == SDL_QUIT) {
                 TRACE("Quit");
                 quit = true;
             }
-        } while (result == 1);
+        } while (return_code == 1);
 
         // sleep
         nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)}, NULL);

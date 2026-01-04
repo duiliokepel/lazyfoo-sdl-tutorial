@@ -85,25 +85,25 @@ HELLOEMBED_LIBS =
 PROGRAMS += $(BIN_DIR)/helloembed
 ALL_OBJS += $(HELLOEMBED_OBJS)
 
-01_hello_sdl_OBJS = $(BUILD_DIR)/01_hello_sdl.o $(BUILD_DIR)/trace.o
+01_hello_sdl_OBJS = $(BUILD_DIR)/01_hello_sdl.o $(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o
 01_hello_sdl_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/01_hello_sdl
 ALL_OBJS += $(01_hello_sdl_OBJS)
 
 02_image_on_screen_OBJS = $(BUILD_DIR)/02_image_on_screen.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/hello_world.bmp.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/hello_world.bmp.o
 02_image_on_screen_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/02_image_on_screen
 ALL_OBJS += $(02_image_on_screen_OBJS)
 
 03_event_driven_programming_OBJS = $(BUILD_DIR)/03_event_driven_programming.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/press_x_to_close.bmp.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/press_x_to_close.bmp.o
 03_event_driven_programming_LIBS = -lSDL2
 PROGRAMS += $(BIN_DIR)/03_event_driven_programming
 ALL_OBJS += $(03_event_driven_programming_OBJS)
 
 04_key_presses_OBJS = $(BUILD_DIR)/04_key_presses.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/press_default.bmp.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/press_default.bmp.o \
 	$(EMBED_DIR)/press_up.bmp.o $(EMBED_DIR)/press_down.bmp.o \
 	$(EMBED_DIR)/press_left.bmp.o $(EMBED_DIR)/press_right.bmp.o
 04_key_presses_LIBS = -lSDL2
@@ -111,30 +111,31 @@ PROGRAMS += $(BIN_DIR)/04_key_presses
 ALL_OBJS += $(04_key_presses_OBJS)
 
 05_optimized_surface_and_soft_stretching_OBJS = $(BUILD_DIR)/05_optimized_surface_and_soft_stretching.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/stretching_to_window.bmp.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/stretching_to_window.bmp.o
 05_optimized_surface_and_soft_stretching_LIBS = -lSDL2 -lm
 PROGRAMS += $(BIN_DIR)/05_optimized_surface_and_soft_stretching
 ALL_OBJS += $(05_optimized_surface_and_soft_stretching_OBJS)
 
 06_extension_libraries_OBJS = $(BUILD_DIR)/06_extension_libraries.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/png_loaded.png.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/png_loaded.png.o
 06_extension_libraries_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/06_extension_libraries
 ALL_OBJS += $(06_extension_libraries_OBJS)
 
 07_texture_loading_and_rendering_OBJS = $(BUILD_DIR)/07_texture_loading_and_rendering.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/rendering_texture.png.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/rendering_texture.png.o
 07_texture_loading_and_rendering_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/07_texture_loading_and_rendering
 ALL_OBJS += $(07_texture_loading_and_rendering_OBJS)
 
-08_geometry_rendering_OBJS = $(BUILD_DIR)/08_geometry_rendering.o $(BUILD_DIR)/trace.o
+08_geometry_rendering_OBJS = $(BUILD_DIR)/08_geometry_rendering.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o
 08_geometry_rendering_LIBS = -lSDL2 -lm
 PROGRAMS += $(BIN_DIR)/08_geometry_rendering
 ALL_OBJS += $(08_geometry_rendering_OBJS)
 
 09_the_viewport_OBJS = $(BUILD_DIR)/09_the_viewport.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/viewport.png.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/viewport.png.o
 09_the_viewport_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/09_the_viewport
 ALL_OBJS += $(09_the_viewport_OBJS)

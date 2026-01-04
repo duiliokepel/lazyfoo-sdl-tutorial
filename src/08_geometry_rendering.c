@@ -20,56 +20,37 @@ struct sdl_system {
 
 int init_SDL(struct sdl_system* system);
 void close_SDL(struct sdl_system* system);
+
 int main_loop(struct sdl_system system);
+int main(int argc, char** argv);
 
 int init_SDL(struct sdl_system* system) {
-    int result = 0;
+    int return_code = 0;
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
 
-    if (!C_ASSERT(system != NULL)) {
-        TRACE("Invalid parameter system");
-        return -1;
-    }
-    if (!C_ASSERT(system->window == NULL)) {
-        TRACE("window must be NULL before init");
-        return -1;
-    }
-    if (!C_ASSERT(system->renderer == NULL)) {
-        TRACE("renderer must be NULL before init");
-        return -1;
-    }
+    ASSERT(system != NULL, return -1;, "Argument system must not be NULL");
+    ASSERT(system->window == NULL, return -1;, "Argument system->window must be NULL before initialization");
+    ASSERT(system->renderer == NULL, return -1;, "Argument system->renderer must be NULL before initialization");
 
     TRACE("Initializing SDL");
-    result = SDL_Init(SDL_INIT_VIDEO);
-    if (!C_ASSERT(result == 0)) {
-        TRACE("SDL_Init() error=[%s]", SDL_GetError());
-        return -1;
-    }
+    return_code = SDL_Init(SDL_INIT_VIDEO);
+    ASSERT(return_code == 0, return -1;, "SDL_Init error=[%s]", SDL_GetError());
 
     TRACE("Creating window");
     system->window = SDL_CreateWindow("SDL Tutorial 08 - Geometry Rendering", SDL_WINDOWPOS_UNDEFINED,
                                       SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (!C_ASSERT(system->window != NULL)) {
-        TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());
-        return -1;
-    }
+    ASSERT(system->window != NULL, SDL_Quit(); return -1;, "SDL_CreateWindow error=[%s]", SDL_GetError());
 
     TRACE("Creating renderer for window");
     system->renderer = SDL_CreateRenderer(system->window, -1, SDL_RENDERER_ACCELERATED);
-    if (!C_ASSERT(system->renderer != NULL)) {
-        TRACE("SDL_CreateRenderer() error=[%s]", SDL_GetError());
-        return -1;
-    }
+    ASSERT(system->renderer != NULL, close_SDL(system); return -1;, "SDL_CreateRenderer error=[%s]", SDL_GetError());
 
     return 0;
 }
 
 void close_SDL(struct sdl_system* system) {
-    if (!C_ASSERT(system != NULL)) {
-        TRACE("Invalid parameter system");
-        return;
-    }
+    ASSERT(system != NULL, return;, "Argument system must not be NULL");
 
     if (system->renderer != NULL) {
         TRACE("Destroying renderer");
@@ -89,97 +70,66 @@ void close_SDL(struct sdl_system* system) {
 }
 
 int main_loop(struct sdl_system system) {
-    int result = 0;
-    SDL_Event eventBuffer;
+    int return_code = 0;
+    SDL_Event event_buffer;
     bool quit = false;
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
     SDL_Rect fill_rect = {SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
     SDL_Rect outline_rect = {SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3};
     int counter = 0;
-    int mouse_x, mouse_y;
+    int mouse_x = 0, mouse_y = 0;
     double p0_x, p0_y;
     double p1_x, p1_y;
     const double CURSOR_RADIUS = 50.0;
     const int CURSOR_STEPS = 20;
 
-    if (!C_ASSERT(system.renderer != NULL)) {
-        TRACE("Invalid renderer in main_loop");
-        return -1;
-    }
+    ASSERT(system.renderer != NULL, return -1;, "Argument system.renderer must not be NULL");
 
     TRACE("Main loop start");
     while (quit == false) {
         // Set renderer color
-        result = SDL_SetRenderDrawColor(system.renderer, 0x00, 0x80, 0x80, 0xFF);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_SetRenderDrawColor() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_SetRenderDrawColor(system.renderer, 0x00, 0x80, 0x80, 0xFF);
+        ASSERT(return_code == 0, return -1;, "SDL_SetRenderDrawColor error=[%s]", SDL_GetError());
 
         // Clear screen
-        result = SDL_RenderClear(system.renderer);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_RenderClear() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_RenderClear(system.renderer);
+        ASSERT(return_code == 0, return -1;, "SDL_RenderClear error=[%s]", SDL_GetError());
 
         // Render red filled quad
-        result = SDL_SetRenderDrawColor(system.renderer, 0xFF, 0x00, 0x00, 0xFF);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_SetRenderDrawColor() error=[%s]", SDL_GetError());
-            return -1;
-        }
-        result = SDL_RenderFillRect(system.renderer, &fill_rect);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_RenderFillRect() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_SetRenderDrawColor(system.renderer, 0xFF, 0x00, 0x00, 0xFF);
+        ASSERT(return_code == 0, return -1;, "SDL_SetRenderDrawColor error=[%s]", SDL_GetError());
+
+        return_code = SDL_RenderFillRect(system.renderer, &fill_rect);
+        ASSERT(return_code == 0, return -1;, "SDL_RenderFillRect error=[%s]", SDL_GetError());
 
         // Render green outlined quad
-        result = SDL_SetRenderDrawColor(system.renderer, 0x00, 0xFF, 0x00, 0xFF);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_SetRenderDrawColor() error=[%s]", SDL_GetError());
-            return -1;
-        }
-        result = SDL_RenderDrawRect(system.renderer, &outline_rect);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_RenderDrawRect() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_SetRenderDrawColor(system.renderer, 0x00, 0xFF, 0x00, 0xFF);
+        ASSERT(return_code == 0, return -1;, "SDL_SetRenderDrawColor error=[%s]", SDL_GetError());
+
+        return_code = SDL_RenderDrawRect(system.renderer, &outline_rect);
+        ASSERT(return_code == 0, return -1;, "SDL_RenderDrawRect error=[%s]", SDL_GetError());
 
         // Draw blue horizontal line
-        result = SDL_SetRenderDrawColor(system.renderer, 0x00, 0x00, 0xFF, 0xFF);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_SetRenderDrawColor() error=[%s]", SDL_GetError());
-            return -1;
-        }
-        result = SDL_RenderDrawLine(system.renderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_RenderDrawLine() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_SetRenderDrawColor(system.renderer, 0x00, 0x00, 0xFF, 0xFF);
+        ASSERT(return_code == 0, return -1;, "SDL_SetRenderDrawColor error=[%s]", SDL_GetError());
+
+        return_code = SDL_RenderDrawLine(system.renderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
+        ASSERT(return_code == 0, return -1;, "SDL_RenderDrawLine error=[%s]", SDL_GetError());
 
         // Draw vertical line of yellow dots
-        result = SDL_SetRenderDrawColor(system.renderer, 0xFF, 0xFF, 0x00, 0xFF);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_SetRenderDrawColor() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_SetRenderDrawColor(system.renderer, 0xFF, 0xFF, 0x00, 0xFF);
+        ASSERT(return_code == 0, return -1;, "SDL_SetRenderDrawColor error=[%s]", SDL_GetError());
+
         for (counter = 0; counter < SCREEN_HEIGHT; counter += 4) {
-            result = SDL_RenderDrawPoint(system.renderer, SCREEN_WIDTH / 2, counter);
-            if (!C_ASSERT(result == 0)) {
-                TRACE("SDL_RenderDrawPoint() error=[%s]", SDL_GetError());
-                return -1;
-            }
+            return_code = SDL_RenderDrawPoint(system.renderer, SCREEN_WIDTH / 2, counter);
+            ASSERT(return_code == 0, return -1;, "SDL_RenderDrawPoint error=[%s]", SDL_GetError());
         }
 
         // Draw a white circle around the mouse
-        result = SDL_SetRenderDrawColor(system.renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_SetRenderDrawColor() error=[%s]", SDL_GetError());
-            return -1;
-        }
+        return_code = SDL_SetRenderDrawColor(system.renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        ASSERT(return_code == 0, return -1;, "SDL_SetRenderDrawColor error=[%s]", SDL_GetError());
+
         SDL_GetMouseState(&mouse_x, &mouse_y);
         p0_x = 0.0;
         p0_y = 1.0;
@@ -193,11 +143,8 @@ int main_loop(struct sdl_system system) {
             x1 = (int)lround((double)mouse_x + (p1_x * CURSOR_RADIUS));
             y1 = (int)lround((double)mouse_y + (p1_y * CURSOR_RADIUS));
 
-            result = SDL_RenderDrawLine(system.renderer, x0, y0, x1, y1);
-            if (!C_ASSERT(result == 0)) {
-                TRACE("SDL_RenderDrawLine() error=[%s]", SDL_GetError());
-                return -1;
-            }
+            return_code = SDL_RenderDrawLine(system.renderer, x0, y0, x1, y1);
+            ASSERT(return_code == 0, return -1;, "SDL_RenderDrawLine error=[%s]", SDL_GetError());
 
             p0_x = p1_x;
             p0_y = p1_y;
@@ -208,16 +155,13 @@ int main_loop(struct sdl_system system) {
 
         // Poll for currently pending events
         do {
-            result = SDL_PollEvent(&eventBuffer);
-            if (!C_ASSERT(result >= 0)) {
-                TRACE("SDL_PollEvent() error=[%s]", SDL_GetError());
-                return -1;
-            }
+            return_code = SDL_PollEvent(&event_buffer);
+            ASSERT(return_code >= 0, return -1;, "SDL_PollEvent error=[%s]", SDL_GetError());
 
-            if (result == 0) {
+            if (return_code == 0) {
                 break;
             }
-            switch (eventBuffer.type) {
+            switch (event_buffer.type) {
                 case SDL_QUIT: {
                     TRACE("Quit");
                     quit = true;
@@ -227,7 +171,7 @@ int main_loop(struct sdl_system system) {
                     break;
                 }
             }
-        } while (result == 1);
+        } while (return_code == 1);
 
         // sleep
         nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)}, NULL);
@@ -236,10 +180,10 @@ int main_loop(struct sdl_system system) {
 }
 
 int main(int argc, char** argv) {
-    int result = 0;
+    int return_code = 0;
     struct sdl_system system = {0};
 
-    TRACE("Start");
+    TRACE("start");
 
     // Command line
     TRACE("argc=[%d]", argc);
@@ -248,23 +192,15 @@ int main(int argc, char** argv) {
     }
 
     TRACE("Initializing");
-    result = init_SDL(&system);
-    if (!C_ASSERT(result == 0)) {
-        TRACE("init_SDL() error");
-        close_SDL(&system);
-        return -1;
-    }
+    return_code = init_SDL(&system);
+    ASSERT(return_code == 0, close_SDL(&system); return -1;, "init_SDL error");
 
-    result = main_loop(system);
-    if (!C_ASSERT(result == 0)) {
-        TRACE("main_loop() error");
-        close_SDL(&system);
-        return -1;
-    }
+    return_code = main_loop(system);
+    ASSERT(return_code == 0, close_SDL(&system); return -1;, "main_loop error");
 
     TRACE("Closing");
     close_SDL(&system);
 
-    TRACE("End");
+    TRACE("end");
     return 0;
 }

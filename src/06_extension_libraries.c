@@ -6,180 +6,76 @@
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
 #include <time.h>
 
 #include "assert.h"
 #include "embed/png_loaded.png.h"
 #include "trace.h"
 
-int init_SDL(SDL_Window** window, SDL_Surface** screen_surface);
-SDL_Surface* load_img_embedded(const void* data, const size_t size, SDL_Surface* screen_surface);
-int load_media(SDL_Surface** png_image, SDL_Surface* screen_surface);
-void close_SDL(SDL_Window** window, SDL_Surface** png_image);
-void main_loop(SDL_Window* window, SDL_Surface* screen_surface, SDL_Surface* png_image);
+struct sdl_system {
+    SDL_Window* window;
+    SDL_Surface* screen_surface;
+};
 
-int init_SDL(SDL_Window** window, SDL_Surface** screen_surface) {
-    int result = 0;
+struct sdl_data {
+    SDL_Surface* png_image;
+};
+
+int init_SDL(struct sdl_system* system);
+void close_SDL(struct sdl_system* system);
+
+SDL_Surface* load_img_embedded(const void* img_data, const size_t size);
+int load_media(struct sdl_data* data);
+void free_media(struct sdl_data* data);
+
+int main_loop(const struct sdl_system system, const struct sdl_data data);
+int main(int argc, char** argv);
+
+int init_SDL(struct sdl_system* system) {
+    int return_code = 0;
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
     const int img_flags = IMG_INIT_PNG;
 
-    if (!C_ASSERT(window != NULL)) {
-        TRACE("Invalid parameter window");
-        return -1;
-    }
-    if (!C_ASSERT(screen_surface != NULL)) {
-        TRACE("Invalid parameter screen_surface");
-        return -1;
-    }
-
-    if (!C_ASSERT(*window == NULL)) {
-        TRACE("window must be NULL before init");
-        return -1;
-    }
-    if (!C_ASSERT(*screen_surface == NULL)) {
-        TRACE("screen_surface must be NULL before init");
-        return -1;
-    }
+    ASSERT(system != NULL, return -1;, "Argument system must not be NULL");
+    ASSERT(system->window == NULL, return -1;, "Argument system->window must be NULL before initialization");
+    ASSERT(system->screen_surface == NULL, return -1;
+           , "Argument system->screen_surface must be NULL before initialization");
 
     TRACE("Initializing SDL");
-    result = SDL_Init(SDL_INIT_VIDEO);
-    if (!C_ASSERT(result >= 0)) {
-        TRACE("SDL_Init() error=[%s]", SDL_GetError());
-        return -1;
-    }
-
-    TRACE("Creating window");
-    *window = SDL_CreateWindow("SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats",
-                               SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
-                               SDL_WINDOW_SHOWN);
-    if (!C_ASSERT(*window != NULL)) {
-        TRACE("SDL_CreateWindow() error=[%s]", SDL_GetError());
-        return -1;
-    }
+    return_code = SDL_Init(SDL_INIT_VIDEO);
+    ASSERT(return_code == 0, return -1;, "SDL_Init error=[%s]", SDL_GetError());
 
     TRACE("Initializing SDL_image");
-    result = IMG_Init(img_flags);
-    if (!C_ASSERT((result & img_flags) == img_flags)) {
-        TRACE("IMG_Init() error=[%s]", IMG_GetError());
-        return -1;
-    }
+    return_code = IMG_Init(img_flags);
+    ASSERT((return_code & img_flags) == img_flags, IMG_Quit(); SDL_Quit(); return -1;
+           , "IMG_Init error=[%s]", IMG_GetError());
+
+    TRACE("Creating window");
+    system->window = SDL_CreateWindow("SDL Tutorial 06 - Extension Libraries and Loading Other Image Formats",
+                                      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                      SDL_WINDOW_SHOWN);
+    ASSERT(system->window != NULL, IMG_Quit(); SDL_Quit(); return -1;, "SDL_CreateWindow error=[%s]", SDL_GetError());
 
     TRACE("Getting window surface");
-    *screen_surface = SDL_GetWindowSurface(*window);
-    if (!C_ASSERT(*screen_surface != NULL)) {
-        TRACE("SDL_GetWindowSurface() error=[%s]", SDL_GetError());
-        return -1;
-    }
+    system->screen_surface = SDL_GetWindowSurface(system->window);
+    ASSERT(system->screen_surface != NULL, close_SDL(system); return -1;
+           , "SDL_GetWindowSurface error=[%s]", SDL_GetError());
 
     return 0;
 }
 
-SDL_Surface* load_img_embedded(const void* data, const size_t size, SDL_Surface* screen_surface) {
-    int result = 0;
-    SDL_RWops* rwops = NULL;
-    SDL_Surface* surface = NULL;
-    SDL_Surface* optimized_surface = NULL;
+void close_SDL(struct sdl_system* system) {
+    ASSERT(system != NULL, return;, "Argument system must not be NULL");
 
-    if (!C_ASSERT(data != NULL)) {
-        TRACE("Invalid parameter data");
-        return NULL;
-    }
-    if (!C_ASSERT(size > 0)) {
-        TRACE("Invalid parameter size");
-        return NULL;
-    }
-    if (!C_ASSERT(size <= INT_MAX)) {
-        TRACE("Size exceeds maximum allowed");
-        return NULL;
-    }
-    if (!C_ASSERT(screen_surface != NULL)) {
-        TRACE("Invalid parameter screen_surface");
-        return NULL;
+    if (system->screen_surface != NULL) {
+        system->screen_surface = NULL;
     }
 
-    TRACE("Opening stream to embedded image data");
-    rwops = SDL_RWFromConstMem(data, (int)size);
-    if (!C_ASSERT(rwops != NULL)) {
-        TRACE("SDL_RWFromConstMem() error=[%s]", SDL_GetError());
-        return NULL;
-    }
-
-    TRACE("Loading surface");
-    surface = IMG_Load_RW(rwops, 1);
-    if (!C_ASSERT(surface != NULL)) {
-        TRACE("IMG_Load_RW() error=[%s]", IMG_GetError());
-        SDL_RWclose(rwops);
-        return NULL;
-    }
-
-    TRACE("Optimizing surface");
-    // optimized_surface = SDL_ConvertSurface(surface, screen_surface->format, 0);
-    optimized_surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
-    if (!C_ASSERT(optimized_surface != NULL)) {
-        TRACE("SDL_ConvertSurface() error=[%s]", SDL_GetError());
-        return NULL;
-    }
-    SDL_FreeSurface(surface);
-
-    TRACE("Setting surface blend mode");
-    result = SDL_SetSurfaceBlendMode(optimized_surface, SDL_BLENDMODE_BLEND);
-    if (!C_ASSERT(result == 0)) {
-        TRACE("SDL_SetSurfaceBlendMode() error=[%s]", SDL_GetError());
-        return NULL;
-    }
-
-    TRACE("Image width=[%d] height=[%d]", optimized_surface->w, optimized_surface->h);
-
-    return optimized_surface;
-}
-
-int load_media(SDL_Surface** png_image, SDL_Surface* screen_surface) {
-    if (!C_ASSERT(png_image != NULL)) {
-        TRACE("Invalid parameter png_image");
-        return -1;
-    }
-    if (!C_ASSERT(screen_surface != NULL)) {
-        TRACE("Invalid parameter screen_surface");
-        return -1;
-    }
-
-    TRACE("Loading surface png_image");
-    if (!C_ASSERT(*png_image == NULL)) {
-        TRACE("Surface must be NULL before calling load_media");
-        return -1;
-    }
-    *png_image = load_img_embedded(_embed_png_loaded_png_start, _embed_png_loaded_png_size, screen_surface);
-    if (!C_ASSERT(*png_image != NULL)) {
-        TRACE("load_img_embedded() error");
-        return -1;
-    }
-
-    return 0;
-}
-
-void close_SDL(SDL_Window** window, SDL_Surface** png_image) {
-    if (!C_ASSERT(window != NULL)) {
-        TRACE("Invalid parameter window");
-        return;
-    }
-    if (!C_ASSERT(png_image != NULL)) {
-        TRACE("Invalid parameter png_image");
-        return;
-    }
-
-    if (*png_image != NULL) {
-        TRACE("Freeing surface png_image");
-        SDL_FreeSurface(*png_image);
-        *png_image = NULL;
-    }
-
-    if (*window != NULL) {
+    if (system->window != NULL) {
         TRACE("Destroying window");
-        SDL_DestroyWindow(*window);
-        *window = NULL;
+        SDL_DestroyWindow(system->window);
+        system->window = NULL;
     }
 
     TRACE("Quitting SDL_image");
@@ -190,32 +86,85 @@ void close_SDL(SDL_Window** window, SDL_Surface** png_image) {
     return;
 }
 
-void main_loop(SDL_Window* window, SDL_Surface* screen_surface, SDL_Surface* png_image) {
-    int result = 0;
+SDL_Surface* load_img_embedded(const void* img_data, const size_t size) {
+    int return_code = 0;
+    SDL_RWops* rwops = NULL;
+    SDL_Surface* surface = NULL;
+    SDL_Surface* optimized_surface = NULL;
 
-    SDL_Event eventBuffer;
+    ASSERT(img_data != NULL, return NULL;, "Argument img_data must not be NULL");
+    ASSERT(size > 0, return NULL;, "Argument size must be larger than 0");
+    ASSERT(size <= INT_MAX, return NULL;, "Argument size must not exceed maximum allowed");
+
+    TRACE("Opening stream to embedded");
+    rwops = SDL_RWFromConstMem(img_data, (int)size);
+    ASSERT(rwops != NULL, return NULL;, "SDL_RWFromConstMem error=[%s]", SDL_GetError());
+
+    TRACE("Loading surface");
+    surface = IMG_Load_RW(rwops, 1);
+    ASSERT(surface != NULL, return NULL;, "IMG_Load_RW error=[%s]", IMG_GetError());
+
+    TRACE("Optimizing surface");
+    optimized_surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+    ASSERT(optimized_surface != NULL, SDL_FreeSurface(surface); return NULL;
+           , "SDL_ConvertSurfaceFormat error=[%s]", SDL_GetError());
+
+    SDL_FreeSurface(surface);
+
+    TRACE("Setting surface blend mode");
+    return_code = SDL_SetSurfaceBlendMode(optimized_surface, SDL_BLENDMODE_BLEND);
+    ASSERT(return_code == 0, SDL_FreeSurface(optimized_surface); return NULL;
+           , "SDL_SetSurfaceBlendMode error=[%s]", SDL_GetError());
+
+    TRACE("Image width=[%d] height=[%d]", optimized_surface->w, optimized_surface->h);
+
+    return optimized_surface;
+}
+
+int load_media(struct sdl_data* data) {
+    ASSERT(data != NULL, return -1;, "Argument data must not be NULL");
+
+    TRACE("Loading surface png_image");
+    ASSERT(data->png_image == NULL, return -1;, "Surface must be NULL before calling load_media");
+    data->png_image = load_img_embedded(_embed_png_loaded_png_start, _embed_png_loaded_png_size);
+    ASSERT(data->png_image != NULL, return -1;, "load_img_embedded error");
+
+    return 0;
+}
+
+void free_media(struct sdl_data* data) {
+    ASSERT(data != NULL, return;, "Argument data must not be NULL");
+
+    if (data->png_image != NULL) {
+        TRACE("Freeing surface png_image");
+        SDL_FreeSurface(data->png_image);
+        data->png_image = NULL;
+    }
+
+    return;
+}
+
+int main_loop(const struct sdl_system system, const struct sdl_data data) {
+    int return_code = 0;
+    int error_num = 0;
+    SDL_Event event_buffer;
     bool quit = false;
     SDL_Rect stretch_rect = {0, 0, 640, 480};
     struct timespec start_time, current_time;
 
-    result = clock_gettime(CLOCK_MONOTONIC, &start_time);
-    if (!C_ASSERT(result == 0)) {
-        int error = errno;
-        TRACE("clock_gettime() error=[%s]", strerror(error));
-        return;
-    }
+    return_code = clock_gettime(CLOCK_MONOTONIC, &start_time);
+    error_num = errno;
+    ASSERT(return_code == 0, return -1;, "clock_gettime error=[%s]", strerror(error_num));
 
     TRACE("Main loop start");
     while (quit == false) {
         double seconds = 0;
 
         // Calculate rect size based on time
-        result = clock_gettime(CLOCK_MONOTONIC, &current_time);
-        if (!C_ASSERT(result == 0)) {
-            int error = errno;
-            TRACE("clock_gettime() error=[%s]", strerror(error));
-            return;
-        }
+        return_code = clock_gettime(CLOCK_MONOTONIC, &current_time);
+        error_num = errno;
+        ASSERT(return_code == 0, return -1;, "clock_gettime error=[%s]", strerror(error_num));
+
         seconds = (double)(current_time.tv_sec - start_time.tv_sec) +
                   ((double)(current_time.tv_nsec - start_time.tv_nsec) / 1000000000.0);
         if (seconds < 0.5) {
@@ -231,43 +180,32 @@ void main_loop(SDL_Window* window, SDL_Surface* screen_surface, SDL_Surface* png
             stretch_rect.w = (int)lround(480.0 * t + 640.0 * (1.0 - t));
             stretch_rect.h = (int)lround(360.0 * t + 480.0 * (1.0 - t));
         } else {
-            result = clock_gettime(CLOCK_MONOTONIC, &start_time);
-            if (!C_ASSERT(result == 0)) {
-                int error = errno;
-                TRACE("clock_gettime() error=[%s]", strerror(error));
-                return;
-            }
+            return_code = clock_gettime(CLOCK_MONOTONIC, &start_time);
+            error_num = errno;
+            ASSERT(return_code == 0, return -1;, "clock_gettime error=[%s]", strerror(error_num));
             continue;
         }
 
         // Fill the surface with color
-        result = SDL_FillRect(screen_surface, NULL, SDL_MapRGB(screen_surface->format, 0x00, 0x80, 0x80));
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_FillRect() error=[%s]", SDL_GetError());
-            return;
-        }
+        return_code =
+            SDL_FillRect(system.screen_surface, NULL, SDL_MapRGB(system.screen_surface->format, 0x00, 0x80, 0x80));
+        ASSERT(return_code == 0, return -1;, "SDL_FillRect error=[%s]", SDL_GetError());
 
         // Blit surface to window
-        result = SDL_BlitScaled(png_image, NULL, screen_surface, &stretch_rect);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_BlitScaled() error=[%s]", SDL_GetError());
-            return;
-        }
+        return_code = SDL_BlitScaled(data.png_image, NULL, system.screen_surface, &stretch_rect);
+        ASSERT(return_code == 0, return -1;, "SDL_BlitScaled error=[%s]", SDL_GetError());
 
         // Update the window surface
-        result = SDL_UpdateWindowSurface(window);
-        if (!C_ASSERT(result == 0)) {
-            TRACE("SDL_UpdateWindowSurface() error=[%s]", SDL_GetError());
-            return;
-        }
+        return_code = SDL_UpdateWindowSurface(system.window);
+        ASSERT(return_code == 0, return -1;, "SDL_UpdateWindowSurface error=[%s]", SDL_GetError());
 
         // Poll for currently pending events
         do {
-            result = SDL_PollEvent(&eventBuffer);
-            if (result == 0) {
+            return_code = SDL_PollEvent(&event_buffer);
+            if (return_code == 0) {
                 break;
             }
-            switch (eventBuffer.type) {
+            switch (event_buffer.type) {
                 case SDL_QUIT: {
                     TRACE("Quit");
                     quit = true;
@@ -277,19 +215,18 @@ void main_loop(SDL_Window* window, SDL_Surface* screen_surface, SDL_Surface* png
                     break;
                 }
             }
-        } while (result == 1);
+        } while (return_code == 1);
 
         // sleep
         nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)}, NULL);
     }
-    return;
+    return 0;
 }
 
 int main(int argc, char** argv) {
-    int result = 0;
-    SDL_Window* window = NULL;
-    SDL_Surface* screen_surface = NULL;
-    SDL_Surface* png_image = NULL;
+    int return_code = 0;
+    struct sdl_system system = {0};
+    struct sdl_data data = {0};
 
     TRACE("start");
 
@@ -300,25 +237,21 @@ int main(int argc, char** argv) {
     }
 
     TRACE("Initializing");
-    result = init_SDL(&window, &screen_surface);
-    if (!C_ASSERT(result == 0)) {
-        TRACE("init_SDL() error");
-        close_SDL(&window, &png_image);
-        return -1;
-    }
+    return_code = init_SDL(&system);
+    ASSERT(return_code == 0, close_SDL(&system); return -1;, "init_SDL error");
 
     TRACE("Loading media");
-    result = load_media(&png_image, screen_surface);
-    if (!C_ASSERT(result >= 0)) {
-        TRACE("load_media() error");
-        close_SDL(&window, &png_image);
-        return -1;
-    }
+    return_code = load_media(&data);
+    ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;, "load_media error");
 
-    main_loop(window, screen_surface, png_image);
+    return_code = main_loop(system, data);
+    ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;, "main_loop error");
+
+    TRACE("Freeing media");
+    free_media(&data);
 
     TRACE("Closing");
-    close_SDL(&window, &png_image);
+    close_SDL(&system);
 
     TRACE("end");
     return 0;
