@@ -128,7 +128,8 @@ ALL_OBJS += $(06_extension_libraries_OBJS)
 PROGRAMS += $(BIN_DIR)/07_texture_loading_and_rendering
 ALL_OBJS += $(07_texture_loading_and_rendering_OBJS)
 
-08_geometry_rendering_OBJS = $(BUILD_DIR)/08_geometry_rendering.o $(BUILD_DIR)/trace.o
+08_geometry_rendering_OBJS = $(BUILD_DIR)/08_geometry_rendering.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o
 08_geometry_rendering_LIBS = -lSDL2 -lm
 PROGRAMS += $(BIN_DIR)/08_geometry_rendering
 ALL_OBJS += $(08_geometry_rendering_OBJS)
