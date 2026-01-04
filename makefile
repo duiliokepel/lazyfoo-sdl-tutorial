@@ -135,7 +135,7 @@ PROGRAMS += $(BIN_DIR)/08_geometry_rendering
 ALL_OBJS += $(08_geometry_rendering_OBJS)
 
 09_the_viewport_OBJS = $(BUILD_DIR)/09_the_viewport.o \
-	$(BUILD_DIR)/trace.o $(EMBED_DIR)/viewport.png.o
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/viewport.png.o
 09_the_viewport_LIBS = -lSDL2 -lSDL2_image -lm
 PROGRAMS += $(BIN_DIR)/09_the_viewport
 ALL_OBJS += $(09_the_viewport_OBJS)

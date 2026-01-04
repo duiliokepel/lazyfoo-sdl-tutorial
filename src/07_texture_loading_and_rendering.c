@@ -49,7 +49,8 @@ int init_SDL(struct sdl_system* system) {
 
     TRACE("Initializing SDL_image");
     return_code = IMG_Init(img_flags);
-    ASSERT((return_code & img_flags) == img_flags, IMG_Quit(); SDL_Quit(); return -1;, "IMG_Init error=[%s]", IMG_GetError());
+    ASSERT((return_code & img_flags) == img_flags, IMG_Quit(); SDL_Quit(); return -1;
+           , "IMG_Init error=[%s]", IMG_GetError());
 
     TRACE("Creating window");
     system->window = SDL_CreateWindow("SDL Tutorial 07 - Texture Loading and Rendering", SDL_WINDOWPOS_UNDEFINED,
