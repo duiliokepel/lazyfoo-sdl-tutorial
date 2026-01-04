@@ -63,8 +63,8 @@ static int timestampISO8601(char *buffer, const size_t buffer_size, const struct
     char date[32];      // YYYY-MM-DDTHH:MM:SS
     char timezone1[6];  // +HHMM
     char timezone2[7];  // +HH:MM
-    int result;
-    size_t size_result;
+    int return_code;
+    size_t return_size;
 
     // Parameter validation
     if (buffer == NULL) {
@@ -91,16 +91,16 @@ static int timestampISO8601(char *buffer, const size_t buffer_size, const struct
         return -1;
     }
     // YYYY-MM-DDTHH:MM:SS
-    size_result = strftime(date, sizeof(date), "%Y-%m-%dT%H:%M:%S", &localtime);
-    if (size_result <= 0) {
+    return_size = strftime(date, sizeof(date), "%Y-%m-%dT%H:%M:%S", &localtime);
+    if (return_size <= 0) {
         fprintf(stderr, "%s:%d - %s - Error generating timestamp in strftime\n", __FILE__, __LINE__, __func__);
         return -1;
     }
 
     // timezone as +HHMM, then make +HH:MM
     strncpy(timezone2, "+00:00", sizeof(timezone2));
-    size_result = strftime(timezone1, sizeof(timezone1), "%z", &localtime);
-    if (size_result != 5) {
+    return_size = strftime(timezone1, sizeof(timezone1), "%z", &localtime);
+    if (return_size != 5) {
         fprintf(stderr, "%s:%d - %s - Error generating timezone in strftime\n", __FILE__, __LINE__, __func__);
         return -1;
     }
@@ -113,16 +113,16 @@ static int timestampISO8601(char *buffer, const size_t buffer_size, const struct
     timezone2[6] = '\0';
 
     // output YYYY-MM-DDTHH:MM:SS,nnnnnnnnn+HH:MM
-    result = snprintf(buffer, buffer_size, "%s,%09ld%s", date, (long)timestamp->tv_nsec, timezone2);
-    if (result < 0) {
+    return_code = snprintf(buffer, buffer_size, "%s,%09ld%s", date, (long)timestamp->tv_nsec, timezone2);
+    if (return_code < 0) {
         int error_num = errno;
         fprintf(stderr, "%s:%d - %s - snprintf error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
         memset(buffer, 0, buffer_size);
         return -1;
     }
-    if ((size_t)result >= buffer_size) {
-        fprintf(stderr, "%s:%d - %s - result=[%i] should not be bigger than buffer_size=[%zu]\n", __FILE__, __LINE__,
-                __func__, result, buffer_size);
+    if ((size_t)return_code >= buffer_size) {
+        fprintf(stderr, "%s:%d - %s - return_code=[%i] should not be bigger than buffer_size=[%zu]\n", __FILE__, __LINE__,
+                __func__, return_code, buffer_size);
         memset(buffer, 0, buffer_size);
         return -1;
     }
@@ -131,7 +131,7 @@ static int timestampISO8601(char *buffer, const size_t buffer_size, const struct
 }
 
 int _trace_va(const char *file, int line, const char *function, const char *format, va_list arguments) {
-    int return_value = 0;
+    int return_code = 0;
     struct timespec timestamp;
     char time_string[TIMESTAMP_SIZE];
 
@@ -150,15 +150,15 @@ int _trace_va(const char *file, int line, const char *function, const char *form
     }
 
     // get current time
-    return_value = clock_gettime(CLOCK_REALTIME, &timestamp);
-    if (return_value != 0) {
+    return_code = clock_gettime(CLOCK_REALTIME, &timestamp);
+    if (return_code != 0) {
         int error_num = errno;
         fprintf(stderr, "%s:%d - %s - clock_gettime error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
         return -1;
     }
 
-    return_value = timestampISO8601(time_string, sizeof(time_string), &timestamp);
-    if (return_value < 0) {
+    return_code = timestampISO8601(time_string, sizeof(time_string), &timestamp);
+    if (return_code < 0) {
         fprintf(stderr, "%s:%d - %s - timestampISO8601 error\n", __FILE__, __LINE__, __func__);
         return -1;
     }
@@ -168,8 +168,8 @@ int _trace_va(const char *file, int line, const char *function, const char *form
         va_list arguments_file;
 
         // output YYYY-MM-DDTHH:MM:SS,nnnnnnnnn+HH:MM file:line - function -
-        return_value = fprintf(trace_file, "%s - %s:%d - %s - ", time_string, file, line, function);
-        if (return_value < 0) {
+        return_code = fprintf(trace_file, "%s - %s:%d - %s - ", time_string, file, line, function);
+        if (return_code < 0) {
             int error_num = errno;
             fprintf(stderr, "%s:%d - %s - fprintf error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
             return -1;
@@ -177,8 +177,8 @@ int _trace_va(const char *file, int line, const char *function, const char *form
 
         // Copy va_list and output message to file
         va_copy(arguments_file, arguments);
-        return_value = vfprintf(trace_file, format, arguments_file);
-        if (return_value < 0) {
+        return_code = vfprintf(trace_file, format, arguments_file);
+        if (return_code < 0) {
             int error_num = errno;
             fprintf(stderr, "%s:%d - %s - vfprintf error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
             va_end(arguments_file);
@@ -186,8 +186,8 @@ int _trace_va(const char *file, int line, const char *function, const char *form
         }
         va_end(arguments_file);
 
-        return_value = fputc('\n', trace_file);
-        if (return_value == EOF) {
+        return_code = fputc('\n', trace_file);
+        if (return_code == EOF) {
             int error_num = errno;
             fprintf(stderr, "%s:%d - %s - fputc error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
             return -1;
@@ -199,8 +199,8 @@ int _trace_va(const char *file, int line, const char *function, const char *form
         va_list arguments_stdout;
 
         // output YYYY-MM-DDTHH:MM:SS,nnnnnnnnn+HH:MM file:line - function -
-        return_value = fprintf(stdout, "%s - %s:%d - %s - ", time_string, file, line, function);
-        if (return_value < 0) {
+        return_code = fprintf(stdout, "%s - %s:%d - %s - ", time_string, file, line, function);
+        if (return_code < 0) {
             int error_num = errno;
             fprintf(stderr, "%s:%d - %s - fprintf error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
             return -1;
@@ -208,8 +208,8 @@ int _trace_va(const char *file, int line, const char *function, const char *form
 
         // Copy va_list and output message to stdout
         va_copy(arguments_stdout, arguments);
-        return_value = vfprintf(stdout, format, arguments_stdout);
-        if (return_value < 0) {
+        return_code = vfprintf(stdout, format, arguments_stdout);
+        if (return_code < 0) {
             int error_num = errno;
             fprintf(stderr, "%s:%d - %s - vfprintf error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
             va_end(arguments_stdout);
@@ -217,8 +217,8 @@ int _trace_va(const char *file, int line, const char *function, const char *form
         }
         va_end(arguments_stdout);
 
-        return_value = fputc('\n', stdout);
-        if (return_value == EOF) {
+        return_code = fputc('\n', stdout);
+        if (return_code == EOF) {
             int error_num = errno;
             fprintf(stderr, "%s:%d - %s - fputc error=[%s]\n", __FILE__, __LINE__, __func__, strerror(error_num));
             return -1;
@@ -229,13 +229,13 @@ int _trace_va(const char *file, int line, const char *function, const char *form
 }
 
 int _trace(const char *file, int line, const char *function, const char *format, ...) {
-    int return_value = 0;
+    int return_code = 0;
     va_list arguments;
 
     va_start(arguments, format);
-    return_value = _trace_va(file, line, function, format, arguments);
+    return_code = _trace_va(file, line, function, format, arguments);
     va_end(arguments);
-    if (return_value < 0) {
+    if (return_code < 0) {
         fprintf(stderr, "%s:%d - %s - _trace_va error\n", __FILE__, __LINE__, __func__);
         return -1;
     }
