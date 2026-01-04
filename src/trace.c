@@ -121,8 +121,8 @@ static int timestampISO8601(char *buffer, const size_t buffer_size, const struct
         return -1;
     }
     if ((size_t)return_code >= buffer_size) {
-        fprintf(stderr, "%s:%d - %s - return_code=[%i] should not be bigger than buffer_size=[%zu]\n", __FILE__, __LINE__,
-                __func__, return_code, buffer_size);
+        fprintf(stderr, "%s:%d - %s - return_code=[%i] should not be bigger than buffer_size=[%zu]\n", __FILE__,
+                __LINE__, __func__, return_code, buffer_size);
         memset(buffer, 0, buffer_size);
         return -1;
     }

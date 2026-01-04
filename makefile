@@ -140,6 +140,13 @@ ALL_OBJS += $(08_geometry_rendering_OBJS)
 PROGRAMS += $(BIN_DIR)/09_the_viewport
 ALL_OBJS += $(09_the_viewport_OBJS)
 
+10_color_keying_OBJS = $(BUILD_DIR)/10_color_keying.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o \
+	$(EMBED_DIR)/earth_background.png.o $(EMBED_DIR)/space_shuttle_colorkey.png.o
+10_color_keying_LIBS = -lSDL2 -lSDL2_image -lm
+PROGRAMS += $(BIN_DIR)/10_color_keying
+ALL_OBJS += $(10_color_keying_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -173,6 +180,8 @@ $(BUILD_DIR)/06_extension_libraries.o: $(EMBED_DIR)/png_loaded.png.h
 $(BUILD_DIR)/07_texture_loading_and_rendering.o: $(EMBED_DIR)/rendering_texture.png.h
 
 $(BUILD_DIR)/09_the_viewport.o: $(EMBED_DIR)/viewport.png.h
+
+$(BUILD_DIR)/10_color_keying.o: $(EMBED_DIR)/earth_background.png.h $(EMBED_DIR)/space_shuttle_colorkey.png.h
 
 ################################################################
 # Targets Build rules
@@ -221,6 +230,10 @@ $(BIN_DIR)/08_geometry_rendering: $(08_geometry_rendering_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/09_the_viewport: $(09_the_viewport_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(09_the_viewport_LIBS)
+
+$(BIN_DIR)/10_color_keying: $(10_color_keying_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(10_color_keying_LIBS)
 
 ################################################################
 # Generic Build rules
