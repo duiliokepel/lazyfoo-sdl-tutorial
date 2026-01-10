@@ -58,7 +58,7 @@ Tutorial Development:
 - [x] SDL Tutorial 08 - Geometry Rendering
 - [x] SDL Tutorial 09 - The Viewport
 - [x] SDL Tutorial 10 - Color Keying
-- [ ] SDL Tutorial 11 - Clip Rendering and Sprite Sheets
+- [x] SDL Tutorial 11 - Clip Rendering and Sprite Sheets
 - [ ] SDL Tutorial 12 - Color Modulation
 - [ ] SDL Tutorial 13 - Alpha Blending
 - [ ] SDL Tutorial 14 - Animated Sprites and VSync
