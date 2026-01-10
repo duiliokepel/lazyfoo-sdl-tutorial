@@ -153,6 +153,12 @@ ALL_OBJS += $(10_color_keying_OBJS)
 PROGRAMS += $(BIN_DIR)/11_clip_rendering
 ALL_OBJS += $(11_clip_rendering_OBJS)
 
+12_color_modulation_OBJS = $(BUILD_DIR)/12_color_modulation.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o $(EMBED_DIR)/color_modulation.png.o
+12_color_modulation_LIBS = -lSDL2 -lSDL2_image
+PROGRAMS += $(BIN_DIR)/12_color_modulation
+ALL_OBJS += $(12_color_modulation_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -190,6 +196,8 @@ $(BUILD_DIR)/09_the_viewport.o: $(EMBED_DIR)/viewport.png.h
 $(BUILD_DIR)/10_color_keying.o: $(EMBED_DIR)/earth_background.png.h $(EMBED_DIR)/space_shuttle_colorkey.png.h
 
 $(BUILD_DIR)/11_clip_rendering.o: $(EMBED_DIR)/sprite_sheet.png.h
+
+$(BUILD_DIR)/12_color_modulation.o: $(EMBED_DIR)/color_modulation.png.h
 
 ################################################################
 # Targets Build rules
@@ -246,6 +254,10 @@ $(BIN_DIR)/10_color_keying: $(10_color_keying_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/11_clip_rendering: $(11_clip_rendering_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(11_clip_rendering_LIBS)
+
+$(BIN_DIR)/12_color_modulation: $(12_color_modulation_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(12_color_modulation_LIBS)
 
 ################################################################
 # Generic Build rules
