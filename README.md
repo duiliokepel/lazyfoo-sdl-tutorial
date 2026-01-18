@@ -60,7 +60,7 @@ Tutorial Development:
 - [x] SDL Tutorial 10 - Color Keying
 - [x] SDL Tutorial 11 - Clip Rendering and Sprite Sheets
 - [x] SDL Tutorial 12 - Color Modulation
-- [ ] SDL Tutorial 13 - Alpha Blending
+- [x] SDL Tutorial 13 - Alpha Blending
 - [ ] SDL Tutorial 14 - Animated Sprites and VSync
 - [ ] SDL Tutorial 15 - Rotation and Flipping
 - [ ] SDL Tutorial 16 - True Type Fonts

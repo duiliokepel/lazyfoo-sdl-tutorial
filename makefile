@@ -159,6 +159,13 @@ ALL_OBJS += $(11_clip_rendering_OBJS)
 PROGRAMS += $(BIN_DIR)/12_color_modulation
 ALL_OBJS += $(12_color_modulation_OBJS)
 
+13_alpha_blending_OBJS = $(BUILD_DIR)/13_alpha_blending.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o \
+	$(EMBED_DIR)/blending_press_w.png.o $(EMBED_DIR)/blending_press_s.png.o
+13_alpha_blending_LIBS = -lSDL2 -lSDL2_image
+PROGRAMS += $(BIN_DIR)/13_alpha_blending
+ALL_OBJS += $(13_alpha_blending_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -198,6 +205,8 @@ $(BUILD_DIR)/10_color_keying.o: $(EMBED_DIR)/earth_background.png.h $(EMBED_DIR)
 $(BUILD_DIR)/11_clip_rendering.o: $(EMBED_DIR)/sprite_sheet.png.h
 
 $(BUILD_DIR)/12_color_modulation.o: $(EMBED_DIR)/color_modulation.png.h
+
+$(BUILD_DIR)/13_alpha_blending.o: $(EMBED_DIR)/blending_press_w.png.h $(EMBED_DIR)/blending_press_s.png.h
 
 ################################################################
 # Targets Build rules
@@ -258,6 +267,10 @@ $(BIN_DIR)/11_clip_rendering: $(11_clip_rendering_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/12_color_modulation: $(12_color_modulation_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(12_color_modulation_LIBS)
+
+$(BIN_DIR)/13_alpha_blending: $(13_alpha_blending_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(13_alpha_blending_LIBS)
 
 ################################################################
 # Generic Build rules
