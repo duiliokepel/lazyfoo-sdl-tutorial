@@ -166,6 +166,13 @@ ALL_OBJS += $(12_color_modulation_OBJS)
 PROGRAMS += $(BIN_DIR)/13_alpha_blending
 ALL_OBJS += $(13_alpha_blending_OBJS)
 
+14_animated_sprites_OBJS = $(BUILD_DIR)/14_animated_sprites.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o \
+	$(EMBED_DIR)/SNES_F-Zero_Racers.png.o
+14_animated_sprites_LIBS = -lSDL2 -lSDL2_image -lm
+PROGRAMS += $(BIN_DIR)/14_animated_sprites
+ALL_OBJS += $(14_animated_sprites_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -207,6 +214,8 @@ $(BUILD_DIR)/11_clip_rendering.o: $(EMBED_DIR)/sprite_sheet.png.h
 $(BUILD_DIR)/12_color_modulation.o: $(EMBED_DIR)/color_modulation.png.h
 
 $(BUILD_DIR)/13_alpha_blending.o: $(EMBED_DIR)/blending_press_w.png.h $(EMBED_DIR)/blending_press_s.png.h
+
+$(BUILD_DIR)/14_animated_sprites.o: $(EMBED_DIR)/SNES_F-Zero_Racers.png.h
 
 ################################################################
 # Targets Build rules
@@ -271,6 +280,10 @@ $(BIN_DIR)/12_color_modulation: $(12_color_modulation_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/13_alpha_blending: $(13_alpha_blending_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(13_alpha_blending_LIBS)
+
+$(BIN_DIR)/14_animated_sprites: $(14_animated_sprites_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(14_animated_sprites_LIBS)
 
 ################################################################
 # Generic Build rules
