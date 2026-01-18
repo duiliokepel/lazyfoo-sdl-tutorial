@@ -61,7 +61,7 @@ Tutorial Development:
 - [x] SDL Tutorial 11 - Clip Rendering and Sprite Sheets
 - [x] SDL Tutorial 12 - Color Modulation
 - [x] SDL Tutorial 13 - Alpha Blending
-- [ ] SDL Tutorial 14 - Animated Sprites and VSync
+- [x] SDL Tutorial 14 - Animated Sprites and VSync
 - [ ] SDL Tutorial 15 - Rotation and Flipping
 - [ ] SDL Tutorial 16 - True Type Fonts
 - [ ] SDL Tutorial 17 - Mouse Events
