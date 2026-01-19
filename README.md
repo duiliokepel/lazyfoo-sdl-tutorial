@@ -62,7 +62,7 @@ Tutorial Development:
 - [x] SDL Tutorial 12 - Color Modulation
 - [x] SDL Tutorial 13 - Alpha Blending
 - [x] SDL Tutorial 14 - Animated Sprites and VSync
-- [ ] SDL Tutorial 15 - Rotation and Flipping
+- [x] SDL Tutorial 15 - Rotation and Flipping
 - [ ] SDL Tutorial 16 - True Type Fonts
 - [ ] SDL Tutorial 17 - Mouse Events
 - [ ] SDL Tutorial 18 - Key States
