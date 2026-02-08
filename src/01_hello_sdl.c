@@ -21,9 +21,7 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing SDL");
     return_code = SDL_Init(SDL_INIT_VIDEO);

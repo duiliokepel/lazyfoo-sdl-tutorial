@@ -39,9 +39,7 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_HEIGHT = 480;
     const int img_flags = IMG_INIT_PNG;
 
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return -1;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return -1; }
     ASSERT (system->window == NULL,
             "Argument system->window must be NULL before initialization") {
         return -1;
@@ -91,9 +89,7 @@ int init_SDL(struct sdl_system* system) {
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return; }
 
     if (system->renderer != NULL) {
         TRACE("Destroying renderer");
@@ -125,9 +121,7 @@ SDL_Texture* load_texture_embedded(const void* img_data, const size_t size,
     ASSERT (img_data != NULL, "Argument img_data must not be NULL") {
         return NULL;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return NULL;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return NULL; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return NULL;
     }
@@ -177,9 +171,7 @@ SDL_Texture* load_texture_embedded(const void* img_data, const size_t size,
 }
 
 int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return -1;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return -1; }
     ASSERT (renderer != NULL, "Argument renderer must not be NULL") {
         return -1;
     }
@@ -200,9 +192,7 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
 }
 
 void free_media(struct sdl_data* data) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return; }
 
     if (data->display_texture != NULL) {
         TRACE("Destroying texture rendering_texture");
@@ -303,9 +293,7 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
                 return -1;
             }
 
-            if (return_code == 0) {
-                break;
-            }
+            if (return_code == 0) { break; }
             switch (event_buffer.type) {
                 case SDL_QUIT: {
                     TRACE("Quit");
@@ -334,9 +322,7 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing");
     return_code = init_SDL(&system);

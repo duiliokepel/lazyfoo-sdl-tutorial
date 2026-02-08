@@ -37,9 +37,7 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
 
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return -1;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return -1; }
     ASSERT (system->window == NULL,
             "Argument system->window must be NULL before initialization") {
         return -1;
@@ -79,13 +77,9 @@ int init_SDL(struct sdl_system* system) {
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return; }
 
-    if (system->screen_surface != NULL) {
-        system->screen_surface = NULL;
-    }
+    if (system->screen_surface != NULL) { system->screen_surface = NULL; }
 
     if (system->window != NULL) {
         TRACE("Destroying window");
@@ -107,9 +101,7 @@ SDL_Surface* load_bmp_embedded(const void* bmp_data, const size_t size,
     ASSERT (bmp_data != NULL, "Argument bmp_data must not be NULL") {
         return NULL;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return NULL;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return NULL; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return NULL;
     }
@@ -146,9 +138,7 @@ SDL_Surface* load_bmp_embedded(const void* bmp_data, const size_t size,
 }
 
 int load_media(struct sdl_data* data, SDL_Surface* screen_surface) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return -1;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return -1; }
     ASSERT (screen_surface != NULL,
             "Argument screen_surface must not be NULL") {
         return -1;
@@ -170,9 +160,7 @@ int load_media(struct sdl_data* data, SDL_Surface* screen_surface) {
 }
 
 void free_media(struct sdl_data* data) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return; }
 
     if (data->stretch_surface != NULL) {
         TRACE("Freeing surface stretch_surface");
@@ -274,9 +262,7 @@ int main_loop(const struct sdl_system system, const struct sdl_data data) {
         // Poll for currently pending events
         do {
             return_code = SDL_PollEvent(&event_buffer);
-            if (return_code == 0) {
-                break;
-            }
+            if (return_code == 0) { break; }
             switch (event_buffer.type) {
                 case SDL_QUIT: {
                     TRACE("Quit");
@@ -305,9 +291,7 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing");
     return_code = init_SDL(&system);

@@ -56,9 +56,7 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_HEIGHT = 480;
     const int img_flags = IMG_INIT_PNG;
 
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return -1;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return -1; }
     ASSERT (system->window == NULL,
             "Argument system->window must be NULL before initialization") {
         return -1;
@@ -107,9 +105,7 @@ int init_SDL(struct sdl_system* system) {
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return; }
 
     if (system->renderer != NULL) {
         TRACE("Destroying renderer");
@@ -140,15 +136,11 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     int height = 0;
     int return_code = 0;
 
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return -1;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return -1; }
     ASSERT (img_data != NULL, "Argument img_data must not be NULL") {
         return -1;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return -1;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return -1; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return -1;
     }
@@ -207,9 +199,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     }
 
     // Fill return texture
-    if (texture->texture != NULL) {
-        free_texture(texture);
-    }
+    if (texture->texture != NULL) { free_texture(texture); }
     texture->texture = loaded_texture;
     texture->width = width;
     texture->height = height;
@@ -217,9 +207,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
 }
 
 void free_texture(struct sdl_texture* texture) {
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return; }
 
     if (texture->texture != NULL) {
         TRACE("Destroying texture");
@@ -258,9 +246,7 @@ int render_texture(const struct sdl_texture texture, SDL_Renderer* renderer,
 
 int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     int return_code = 0;
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return -1;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return -1; }
     ASSERT (renderer != NULL, "Argument renderer must not be NULL") {
         return -1;
     }
@@ -269,25 +255,19 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     return_code = load_texture_embedded(
         &(data->background_texture), _embed_earth_background_png_start,
         _embed_earth_background_png_size, renderer);
-    ASSERT (return_code == 0, "load_texture_embedded error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "load_texture_embedded error") { return -1; }
 
     TRACE("Loading texture colorkey_texture");
     return_code = load_texture_embedded(
         &(data->colorkey_texture), _embed_space_shuttle_colorkey_png_start,
         _embed_space_shuttle_colorkey_png_size, renderer);
-    ASSERT (return_code == 0, "load_texture_embedded error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "load_texture_embedded error") { return -1; }
 
     return 0;
 }
 
 void free_media(struct sdl_data* data) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return; }
 
     TRACE("Destroying texture background_texture");
     free_texture(&(data->background_texture));
@@ -312,12 +292,8 @@ int get_animation_state(struct timespec* start_time, int* pos_x, int* pos_y) {
     ASSERT (start_time != NULL, "Argument start_time must not be NULL") {
         return -1;
     }
-    ASSERT (pos_x != NULL, "Argument pos_x must not be NULL") {
-        return -1;
-    }
-    ASSERT (pos_y != NULL, "Argument pos_y must not be NULL") {
-        return -1;
-    }
+    ASSERT (pos_x != NULL, "Argument pos_x must not be NULL") { return -1; }
+    ASSERT (pos_y != NULL, "Argument pos_y must not be NULL") { return -1; }
 
     // Get current time
     return_code = clock_gettime(CLOCK_MONOTONIC, &current_time);
@@ -379,21 +355,15 @@ int main_loop(const struct sdl_system system, const struct sdl_data data) {
         // Render background_texture to screen
         return_code =
             render_texture(data.background_texture, system.renderer, 0, 0);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         return_code = get_animation_state(&start_time, &pos_x, &pos_y);
-        ASSERT (return_code == 0, "get_animation_state error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "get_animation_state error") { return -1; }
 
         // Render colorkey_texture to screen
         return_code = render_texture(data.colorkey_texture, system.renderer,
                                      pos_x, pos_y);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         // Update screen
         SDL_RenderPresent(system.renderer);
@@ -406,9 +376,7 @@ int main_loop(const struct sdl_system system, const struct sdl_data data) {
                 return -1;
             }
 
-            if (return_code == 0) {
-                break;
-            }
+            if (return_code == 0) { break; }
             switch (event_buffer.type) {
                 case SDL_QUIT: {
                     TRACE("Quit");
@@ -437,9 +405,7 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing");
     return_code = init_SDL(&system);

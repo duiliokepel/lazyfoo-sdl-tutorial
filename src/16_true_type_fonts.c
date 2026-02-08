@@ -66,9 +66,7 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_HEIGHT = 480;
     const int img_flags = IMG_INIT_PNG;
 
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return -1;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return -1; }
     ASSERT (system->window == NULL,
             "Argument system->window must be NULL before initialization") {
         return -1;
@@ -128,9 +126,7 @@ int init_SDL(struct sdl_system* system) {
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return; }
 
     if (system->renderer != NULL) {
         TRACE("Destroying renderer");
@@ -165,15 +161,11 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     int height = 0;
     int return_code = 0;
 
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return -1;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return -1; }
     ASSERT (img_data != NULL, "Argument img_data must not be NULL") {
         return -1;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return -1;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return -1; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return -1;
     }
@@ -237,9 +229,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     }
 
     // Fill return texture
-    if (texture->texture != NULL) {
-        free_texture(texture);
-    }
+    if (texture->texture != NULL) { free_texture(texture); }
     texture->texture = loaded_texture;
     texture->width = width;
     texture->height = height;
@@ -247,9 +237,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
 }
 
 void free_texture(struct sdl_texture* texture) {
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return; }
 
     if (texture->texture != NULL) {
         TRACE("Destroying texture");
@@ -312,18 +300,12 @@ int load_font_embedded(TTF_Font** font, const int ptsize, const void* ttf_data,
     TTF_Font* loaded_font = NULL;
     // int return_code = 0;
 
-    ASSERT (font != NULL, "Argument font must not be NULL") {
-        return -1;
-    }
-    ASSERT (ptsize > 0, "Argument ptsize must be larger than 0") {
-        return -1;
-    }
+    ASSERT (font != NULL, "Argument font must not be NULL") { return -1; }
+    ASSERT (ptsize > 0, "Argument ptsize must be larger than 0") { return -1; }
     ASSERT (ttf_data != NULL, "Argument ttf_data must not be NULL") {
         return -1;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return -1;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return -1; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return -1;
     }
@@ -341,18 +323,14 @@ int load_font_embedded(TTF_Font** font, const int ptsize, const void* ttf_data,
     }
 
     // Fill return font
-    if (*font != NULL) {
-        free_font(font);
-    }
+    if (*font != NULL) { free_font(font); }
     *font = loaded_font;
 
     return 0;
 }
 
 void free_font(TTF_Font** font) {
-    ASSERT (font != NULL, "Argument font must not be NULL") {
-        return;
-    }
+    ASSERT (font != NULL, "Argument font must not be NULL") { return; }
 
     if (*font != NULL) {
         TRACE("Destroying font");
@@ -372,15 +350,9 @@ int create_text_texture(struct sdl_texture* texture, const char* text,
     int height = 0;
     int return_code = 0;
 
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return -1;
-    }
-    ASSERT (text != NULL, "Argument text must not be NULL") {
-        return -1;
-    }
-    ASSERT (font != NULL, "Argument font must not be NULL") {
-        return -1;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return -1; }
+    ASSERT (text != NULL, "Argument text must not be NULL") { return -1; }
+    ASSERT (font != NULL, "Argument font must not be NULL") { return -1; }
     ASSERT (renderer != NULL, "Argument renderer must not be NULL") {
         return -1;
     }
@@ -421,9 +393,7 @@ int create_text_texture(struct sdl_texture* texture, const char* text,
     }
 
     // Fill return texture
-    if (texture->texture != NULL) {
-        free_texture(texture);
-    }
+    if (texture->texture != NULL) { free_texture(texture); }
     texture->texture = loaded_texture;
     texture->width = width;
     texture->height = height;
@@ -434,9 +404,7 @@ int create_text_texture(struct sdl_texture* texture, const char* text,
 int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     int return_code = 0;
 
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return -1;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return -1; }
     ASSERT (renderer != NULL, "Argument renderer must not be NULL") {
         return -1;
     }
@@ -445,24 +413,18 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     return_code = load_font_embedded(&(data->notosans_regular), 96,
                                      _embed_fonts_NotoSans_Regular_ttf_start,
                                      _embed_fonts_NotoSans_Regular_ttf_size);
-    ASSERT (return_code == 0, "load_font_embedded error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "load_font_embedded error") { return -1; }
 
     return_code = create_text_texture(
         &(data->hello_world_texture), "Hello, World!", data->notosans_regular,
         (SDL_Color){0x00, 0x00, 0x00, 0xFF}, renderer);
-    ASSERT (return_code == 0, "create_text_texture error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "create_text_texture error") { return -1; }
 
     return 0;
 }
 
 void free_media(struct sdl_data* data) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return; }
 
     TRACE("Destroying texture hello_world_texture");
     free_texture(&(data->hello_world_texture));
@@ -477,9 +439,7 @@ int handle_events(bool* quit) {
     SDL_Event event_buffer;
     int return_code = 0;
 
-    ASSERT (quit != NULL, "Argument quit must not be NULL") {
-        return -1;
-    }
+    ASSERT (quit != NULL, "Argument quit must not be NULL") { return -1; }
 
     do {
         return_code = SDL_PollEvent(&event_buffer);
@@ -487,9 +447,7 @@ int handle_events(bool* quit) {
             return -1;
         }
 
-        if (return_code == 0) {
-            break;
-        }
+        if (return_code == 0) { break; }
         switch (event_buffer.type) {
             case SDL_QUIT: {
                 TRACE("Quit");
@@ -571,18 +529,14 @@ int main_loop(const struct sdl_system system, const struct sdl_data data) {
         return_code = render_texture(data.hello_world_texture, system.renderer,
                                      draw_rect.x, draw_rect.y, NULL, 0.0, NULL,
                                      SDL_FLIP_NONE);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         // Update screen
         SDL_RenderPresent(system.renderer);
 
         // Poll for currently pending events
         return_code = handle_events(&quit);
-        ASSERT (return_code == 0, "handle_events error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "handle_events error") { return -1; }
 
         // sleep
         // nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 /
@@ -600,15 +554,11 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing");
     return_code = init_SDL(&system);
-    ASSERT (return_code == 0, "init_SDL error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "init_SDL error") { return -1; }
 
     TRACE("Loading media");
     return_code = load_media(&data, system.renderer);

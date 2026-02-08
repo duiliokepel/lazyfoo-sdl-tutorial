@@ -58,9 +58,7 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_HEIGHT = 480;
     const int img_flags = IMG_INIT_PNG;
 
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return -1;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return -1; }
     ASSERT (system->window == NULL,
             "Argument system->window must be NULL before initialization") {
         return -1;
@@ -110,9 +108,7 @@ int init_SDL(struct sdl_system* system) {
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return; }
 
     if (system->renderer != NULL) {
         TRACE("Destroying renderer");
@@ -144,15 +140,11 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     int height = 0;
     int return_code = 0;
 
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return -1;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return -1; }
     ASSERT (img_data != NULL, "Argument img_data must not be NULL") {
         return -1;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return -1;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return -1; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return -1;
     }
@@ -216,9 +208,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     }
 
     // Fill return texture
-    if (texture->texture != NULL) {
-        free_texture(texture);
-    }
+    if (texture->texture != NULL) { free_texture(texture); }
     texture->texture = loaded_texture;
     texture->width = width;
     texture->height = height;
@@ -226,9 +216,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
 }
 
 void free_texture(struct sdl_texture* texture) {
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return; }
 
     if (texture->texture != NULL) {
         TRACE("Destroying texture");
@@ -281,9 +269,7 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     SDL_Color color_key = {
         .r = 0x93, .g = 0xBB, .b = 0xEC, .a = 0};  // colorkey #93bbec
 
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return -1;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return -1; }
     ASSERT (renderer != NULL, "Argument renderer must not be NULL") {
         return -1;
     }
@@ -292,9 +278,7 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     return_code = load_texture_embedded(
         &(data->snes_fzero_racers), _embed_SNES_F_Zero_Racers_png_start,
         _embed_SNES_F_Zero_Racers_png_size, renderer, &color_key);
-    ASSERT (return_code == 0, "load_texture_embedded error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "load_texture_embedded error") { return -1; }
 
     data->blue_falcon_clips[0] = (SDL_Rect){.x = 1, .y = 18, .w = 48, .h = 32};
     data->blue_falcon_clips[1] = (SDL_Rect){.x = 50, .y = 18, .w = 48, .h = 32};
@@ -413,9 +397,7 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
 }
 
 void free_media(struct sdl_data* data) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return; }
 
     TRACE("Destroying texture SNES_F-Zero_Racers");
     free_texture(&(data->snes_fzero_racers));
@@ -438,9 +420,7 @@ int get_animation_state(struct timespec* start_time, int* index) {
     ASSERT (start_time != NULL, "Argument start_time must not be NULL") {
         return -1;
     }
-    ASSERT (index != NULL, "Argument index must not be NULL") {
-        return -1;
-    }
+    ASSERT (index != NULL, "Argument index must not be NULL") { return -1; }
 
     // Get current time
     return_code = clock_gettime(CLOCK_MONOTONIC, &current_time);
@@ -464,12 +444,8 @@ int get_animation_state(struct timespec* start_time, int* index) {
         *index = (int)lround((1.0 - t) * 12 + t * 0);
     }
 
-    if (*index < 0) {
-        *index = 0;
-    }
-    if (*index > 12) {
-        *index = 12;
-    }
+    if (*index < 0) { *index = 0; }
+    if (*index > 12) { *index = 12; }
 
     return 0;
 }
@@ -478,9 +454,7 @@ int handle_events(bool* quit) {
     SDL_Event event_buffer;
     int return_code = 0;
 
-    ASSERT (quit != NULL, "Argument quit must not be NULL") {
-        return -1;
-    }
+    ASSERT (quit != NULL, "Argument quit must not be NULL") { return -1; }
 
     do {
         return_code = SDL_PollEvent(&event_buffer);
@@ -488,9 +462,7 @@ int handle_events(bool* quit) {
             return -1;
         }
 
-        if (return_code == 0) {
-            break;
-        }
+        if (return_code == 0) { break; }
         switch (event_buffer.type) {
             case SDL_QUIT: {
                 TRACE("Quit");
@@ -544,49 +516,35 @@ int main_loop(const struct sdl_system system, const struct sdl_data data) {
         }
 
         return_code = get_animation_state(&start_time, &index);
-        ASSERT (return_code == 0, "get_animation_state error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "get_animation_state error") { return -1; }
 
         // Render textures
         return_code = render_texture(data.snes_fzero_racers, system.renderer,
                                      296, 384, &data.blue_falcon_clips[index]);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         return_code = render_texture(data.snes_fzero_racers, system.renderer,
                                      448, 273, &data.golden_fox_clips[index]);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         return_code = render_texture(data.snes_fzero_racers, system.renderer,
                                      390, 95, &data.wild_goose_clips[index]);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         return_code = render_texture(data.snes_fzero_racers, system.renderer,
                                      202, 95, &data.fire_stingray_clips[index]);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         return_code = render_texture(data.snes_fzero_racers, system.renderer,
                                      144, 273, &data.snail_clips[index]);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         // Update screen
         SDL_RenderPresent(system.renderer);
 
         // Poll for currently pending events
         return_code = handle_events(&quit);
-        ASSERT (return_code == 0, "handle_events error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "handle_events error") { return -1; }
 
         // sleep
         // nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 /
@@ -604,9 +562,7 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing");
     return_code = init_SDL(&system);

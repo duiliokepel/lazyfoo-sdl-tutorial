@@ -48,9 +48,7 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_HEIGHT = 480;
     const int img_flags = IMG_INIT_PNG;
 
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return -1;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return -1; }
     ASSERT (system->window == NULL,
             "Argument system->window must be NULL before initialization") {
         return -1;
@@ -99,9 +97,7 @@ int init_SDL(struct sdl_system* system) {
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT (system != NULL, "Argument system must not be NULL") {
-        return;
-    }
+    ASSERT (system != NULL, "Argument system must not be NULL") { return; }
 
     if (system->renderer != NULL) {
         TRACE("Destroying renderer");
@@ -132,15 +128,11 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     int height = 0;
     int return_code = 0;
 
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return -1;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return -1; }
     ASSERT (img_data != NULL, "Argument img_data must not be NULL") {
         return -1;
     }
-    ASSERT (size > 0, "Argument size must be larger than 0") {
-        return -1;
-    }
+    ASSERT (size > 0, "Argument size must be larger than 0") { return -1; }
     ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
         return -1;
     }
@@ -189,9 +181,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
     }
 
     // Fill return texture
-    if (texture->texture != NULL) {
-        free_texture(texture);
-    }
+    if (texture->texture != NULL) { free_texture(texture); }
     texture->texture = loaded_texture;
     texture->width = width;
     texture->height = height;
@@ -199,9 +189,7 @@ int load_texture_embedded(struct sdl_texture* texture, const void* img_data,
 }
 
 void free_texture(struct sdl_texture* texture) {
-    ASSERT (texture != NULL, "Argument texture must not be NULL") {
-        return;
-    }
+    ASSERT (texture != NULL, "Argument texture must not be NULL") { return; }
 
     if (texture->texture != NULL) {
         TRACE("Destroying texture");
@@ -251,9 +239,7 @@ int render_texture(const struct sdl_texture texture, SDL_Renderer* renderer,
 
 int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     int return_code = 0;
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return -1;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return -1; }
     ASSERT (renderer != NULL, "Argument renderer must not be NULL") {
         return -1;
     }
@@ -262,17 +248,13 @@ int load_media(struct sdl_data* data, SDL_Renderer* renderer) {
     return_code = load_texture_embedded(
         &(data->color_modulation), _embed_color_modulation_png_start,
         _embed_color_modulation_png_size, renderer);
-    ASSERT (return_code == 0, "load_texture_embedded error") {
-        return -1;
-    }
+    ASSERT (return_code == 0, "load_texture_embedded error") { return -1; }
 
     return 0;
 }
 
 void free_media(struct sdl_data* data) {
-    ASSERT (data != NULL, "Argument data must not be NULL") {
-        return;
-    }
+    ASSERT (data != NULL, "Argument data must not be NULL") { return; }
 
     TRACE("Destroying texture color_modulation");
     free_texture(&(data->color_modulation));
@@ -285,18 +267,10 @@ int handle_events(bool* quit, uint8_t* red, uint8_t* green, uint8_t* blue) {
     int return_code = 0;
     int red_buffer, green_buffer, blue_buffer;
 
-    ASSERT (quit != NULL, "Argument quit must not be NULL") {
-        return -1;
-    }
-    ASSERT (red != NULL, "Argument red must not be NULL") {
-        return -1;
-    }
-    ASSERT (green != NULL, "Argument green must not be NULL") {
-        return -1;
-    }
-    ASSERT (blue != NULL, "Argument blue must not be NULL") {
-        return -1;
-    }
+    ASSERT (quit != NULL, "Argument quit must not be NULL") { return -1; }
+    ASSERT (red != NULL, "Argument red must not be NULL") { return -1; }
+    ASSERT (green != NULL, "Argument green must not be NULL") { return -1; }
+    ASSERT (blue != NULL, "Argument blue must not be NULL") { return -1; }
 
     red_buffer = *red;
     green_buffer = *green;
@@ -308,9 +282,7 @@ int handle_events(bool* quit, uint8_t* red, uint8_t* green, uint8_t* blue) {
             return -1;
         }
 
-        if (return_code == 0) {
-            break;
-        }
+        if (return_code == 0) { break; }
         switch (event_buffer.type) {
             case SDL_QUIT: {
                 TRACE("Quit");
@@ -418,18 +390,14 @@ int main_loop(const struct sdl_system system, const struct sdl_data data) {
         // Render texture
         return_code =
             render_texture(data.color_modulation, system.renderer, 0, 0, NULL);
-        ASSERT (return_code == 0, "render_texture error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "render_texture error") { return -1; }
 
         // Update screen
         SDL_RenderPresent(system.renderer);
 
         // Poll for currently pending events
         return_code = handle_events(&quit, &red, &green, &blue);
-        ASSERT (return_code == 0, "handle_events error") {
-            return -1;
-        }
+        ASSERT (return_code == 0, "handle_events error") { return -1; }
 
         // sleep
         nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)},
@@ -447,9 +415,7 @@ int main(int argc, char** argv) {
 
     // Command line
     TRACE("argc=[%d]", argc);
-    for (int i = 0; i < argc; i++) {
-        TRACE("argv[%d]=[%s]", i, argv[i]);
-    }
+    for (int i = 0; i < argc; i++) { TRACE("argv[%d]=[%s]", i, argv[i]); }
 
     TRACE("Initializing");
     return_code = init_SDL(&system);
