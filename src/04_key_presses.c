@@ -48,30 +48,50 @@ int init_SDL(struct sdl_system* system) {
     const int SCREEN_WIDTH = 640;
     const int SCREEN_HEIGHT = 480;
 
-    ASSERT(system != NULL, return -1;, "Argument system must not be NULL");
-    ASSERT(system->window == NULL, return -1;, "Argument system->window must be NULL before initialization");
-    ASSERT(system->screen_surface == NULL, return -1;
-           , "Argument system->screen_surface must be NULL before initialization");
+    ASSERT (system != NULL, "Argument system must not be NULL") {
+        return -1;
+    }
+    ASSERT (system->window == NULL,
+            "Argument system->window must be NULL before initialization") {
+        return -1;
+    }
+    ASSERT (system->screen_surface == NULL,
+            "Argument system->screen_surface must be NULL before "
+            "initialization") {
+        return -1;
+    }
 
     TRACE("Initializing SDL");
     return_code = SDL_Init(SDL_INIT_VIDEO);
-    ASSERT(return_code == 0, return -1;, "SDL_Init error=[%s]", SDL_GetError());
+    ASSERT (return_code == 0, "SDL_Init error=[%s]", SDL_GetError()) {
+        return -1;
+    }
 
     TRACE("Creating window");
-    system->window = SDL_CreateWindow("SDL Tutorial 04 - Key Presses", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                      SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    ASSERT(system->window != NULL, SDL_Quit(); return -1;, "SDL_CreateWindow error=[%s]", SDL_GetError());
+    system->window = SDL_CreateWindow(
+        "SDL Tutorial 04 - Key Presses", SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    ASSERT (system->window != NULL, "SDL_CreateWindow error=[%s]",
+            SDL_GetError()) {
+        SDL_Quit();
+        return -1;
+    }
 
     TRACE("Getting window surface");
     system->screen_surface = SDL_GetWindowSurface(system->window);
-    ASSERT(system->screen_surface != NULL, close_SDL(system); return -1;
-           , "SDL_GetWindowSurface error=[%s]", SDL_GetError());
+    ASSERT (system->screen_surface != NULL, "SDL_GetWindowSurface error=[%s]",
+            SDL_GetError()) {
+        close_SDL(system);
+        return -1;
+    }
 
     return 0;
 }
 
 void close_SDL(struct sdl_system* system) {
-    ASSERT(system != NULL, return;, "Argument system must not be NULL");
+    ASSERT (system != NULL, "Argument system must not be NULL") {
+        return;
+    }
 
     if (system->screen_surface != NULL) {
         system->screen_surface = NULL;
@@ -92,64 +112,106 @@ SDL_Surface* load_bmp_embedded(const void* bmp_data, const size_t size) {
     SDL_RWops* rwops = NULL;
     SDL_Surface* return_surface = NULL;
 
-    ASSERT(bmp_data != NULL, return NULL;, "Argument bmp_data must not be NULL");
-    ASSERT(size > 0, return NULL;, "Argument size must be larger than 0");
-    ASSERT(size <= INT_MAX, return NULL;, "Argument size must not exceed maximum allowed");
+    ASSERT (bmp_data != NULL, "Argument bmp_data must not be NULL") {
+        return NULL;
+    }
+    ASSERT (size > 0, "Argument size must be larger than 0") {
+        return NULL;
+    }
+    ASSERT (size <= INT_MAX, "Argument size must not exceed maximum allowed") {
+        return NULL;
+    }
 
     TRACE("Opening stream to embedded");
     rwops = SDL_RWFromConstMem(bmp_data, (int)size);
-    ASSERT(rwops != NULL, return NULL;, "SDL_RWFromConstMem error=[%s]", SDL_GetError());
+    ASSERT (rwops != NULL, "SDL_RWFromConstMem error=[%s]", SDL_GetError()) {
+        return NULL;
+    }
 
     TRACE("Loading surface");
     return_surface = SDL_LoadBMP_RW(rwops, 1);
-    ASSERT(return_surface != NULL, return NULL;, "SDL_LoadBMP_RW error=[%s]", SDL_GetError());
+    ASSERT (return_surface != NULL, "SDL_LoadBMP_RW error=[%s]",
+            SDL_GetError()) {
+        return NULL;
+    }
 
     TRACE("Image width=[%d] height=[%d]", return_surface->w, return_surface->h);
     return return_surface;
 }
 
 int load_media(struct sdl_data* data) {
-    ASSERT(data != NULL, return -1;, "Argument data must not be NULL");
+    ASSERT (data != NULL, "Argument data must not be NULL") {
+        return -1;
+    }
 
     TRACE("Loading surface press_default");
-    ASSERT(data->key_press_surface[KEY_PRESS_DEFAULT] == NULL, return -1;
-           , "Surface must be NULL before calling load_media");
-    data->key_press_surface[KEY_PRESS_DEFAULT] =
-        load_bmp_embedded(_embed_press_default_bmp_start, _embed_press_default_bmp_size);
-    ASSERT(data->key_press_surface[KEY_PRESS_DEFAULT] != NULL, return -1;, "load_bmp_embedded error");
+    ASSERT (data->key_press_surface[KEY_PRESS_DEFAULT] == NULL,
+            "Surface must be NULL before calling load_media") {
+        return -1;
+    }
+    data->key_press_surface[KEY_PRESS_DEFAULT] = load_bmp_embedded(
+        _embed_press_default_bmp_start, _embed_press_default_bmp_size);
+    ASSERT (data->key_press_surface[KEY_PRESS_DEFAULT] != NULL,
+            "load_bmp_embedded error") {
+        return -1;
+    }
 
     TRACE("Loading surface press_up");
-    ASSERT(data->key_press_surface[KEY_PRESS_UP] == NULL, return -1;, "Surface must be NULL before calling load_media");
-    data->key_press_surface[KEY_PRESS_UP] = load_bmp_embedded(_embed_press_up_bmp_start, _embed_press_up_bmp_size);
-    ASSERT(data->key_press_surface[KEY_PRESS_UP] != NULL, return -1;, "load_bmp_embedded error");
+    ASSERT (data->key_press_surface[KEY_PRESS_UP] == NULL,
+            "Surface must be NULL before calling load_media") {
+        return -1;
+    }
+    data->key_press_surface[KEY_PRESS_UP] =
+        load_bmp_embedded(_embed_press_up_bmp_start, _embed_press_up_bmp_size);
+    ASSERT (data->key_press_surface[KEY_PRESS_UP] != NULL,
+            "load_bmp_embedded error") {
+        return -1;
+    }
 
     TRACE("Loading surface press_down");
-    ASSERT(data->key_press_surface[KEY_PRESS_DOWN] == NULL, return -1;
-           , "Surface must be NULL before calling load_media");
-    data->key_press_surface[KEY_PRESS_DOWN] =
-        load_bmp_embedded(_embed_press_down_bmp_start, _embed_press_down_bmp_size);
-    ASSERT(data->key_press_surface[KEY_PRESS_DOWN] != NULL, return -1;, "load_bmp_embedded error");
+    ASSERT (data->key_press_surface[KEY_PRESS_DOWN] == NULL,
+            "Surface must be NULL before calling load_media") {
+        return -1;
+    }
+    data->key_press_surface[KEY_PRESS_DOWN] = load_bmp_embedded(
+        _embed_press_down_bmp_start, _embed_press_down_bmp_size);
+    ASSERT (data->key_press_surface[KEY_PRESS_DOWN] != NULL,
+            "load_bmp_embedded error") {
+        return -1;
+    }
 
     TRACE("Loading surface press_left");
-    ASSERT(data->key_press_surface[KEY_PRESS_LEFT] == NULL, return -1;
-           , "Surface must be NULL before calling load_media");
-    data->key_press_surface[KEY_PRESS_LEFT] =
-        load_bmp_embedded(_embed_press_left_bmp_start, _embed_press_left_bmp_size);
-    ASSERT(data->key_press_surface[KEY_PRESS_LEFT] != NULL, return -1;, "load_bmp_embedded error");
+    ASSERT (data->key_press_surface[KEY_PRESS_LEFT] == NULL,
+            "Surface must be NULL before calling load_media") {
+        return -1;
+    }
+    data->key_press_surface[KEY_PRESS_LEFT] = load_bmp_embedded(
+        _embed_press_left_bmp_start, _embed_press_left_bmp_size);
+    ASSERT (data->key_press_surface[KEY_PRESS_LEFT] != NULL,
+            "load_bmp_embedded error") {
+        return -1;
+    }
 
     TRACE("Loading surface press_right");
-    ASSERT(data->key_press_surface[KEY_PRESS_RIGHT] == NULL, return -1;
-           , "Surface must be NULL before calling load_media");
-    data->key_press_surface[KEY_PRESS_RIGHT] =
-        load_bmp_embedded(_embed_press_right_bmp_start, _embed_press_right_bmp_size);
-    ASSERT(data->key_press_surface[KEY_PRESS_RIGHT] != NULL, return -1;, "load_bmp_embedded error");
+    ASSERT (data->key_press_surface[KEY_PRESS_RIGHT] == NULL,
+            "Surface must be NULL before calling load_media") {
+        return -1;
+    }
+    data->key_press_surface[KEY_PRESS_RIGHT] = load_bmp_embedded(
+        _embed_press_right_bmp_start, _embed_press_right_bmp_size);
+    ASSERT (data->key_press_surface[KEY_PRESS_RIGHT] != NULL,
+            "load_bmp_embedded error") {
+        return -1;
+    }
 
     return 0;
 }
 
 void free_media(struct sdl_data* data) {
     int counter = 0;
-    ASSERT(data != NULL, return;, "Argument data must not be NULL");
+    ASSERT (data != NULL, "Argument data must not be NULL") {
+        return;
+    }
 
     for (counter = 0; counter < KEY_PRESS_TOTAL; counter++) {
         if (data->key_press_surface[counter] != NULL) {
@@ -174,15 +236,26 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
         // Update current image shown on screen
         if (current_surface != last_surface) {
             TRACE("Blitting surface %d to window", current_surface);
-            ASSERT(data.key_press_surface[current_surface] != NULL, return -1;, "Surface missing");
-            return_code = SDL_BlitSurface(data.key_press_surface[current_surface], NULL, system.screen_surface, NULL);
-            ASSERT(return_code == 0, return -1;, "SDL_BlitSurface error=[%s]", SDL_GetError());
+            ASSERT (data.key_press_surface[current_surface] != NULL,
+                    "Surface missing") {
+                return -1;
+            }
+            return_code =
+                SDL_BlitSurface(data.key_press_surface[current_surface], NULL,
+                                system.screen_surface, NULL);
+            ASSERT (return_code == 0, "SDL_BlitSurface error=[%s]",
+                    SDL_GetError()) {
+                return -1;
+            }
             last_surface = current_surface;
         }
 
         // Update the window surface
         return_code = SDL_UpdateWindowSurface(system.window);
-        ASSERT(return_code == 0, return -1;, "SDL_UpdateWindowSurface error=[%s]", SDL_GetError());
+        ASSERT (return_code == 0, "SDL_UpdateWindowSurface error=[%s]",
+                SDL_GetError()) {
+            return -1;
+        }
 
         // Poll for currently pending events
         do {
@@ -236,7 +309,8 @@ int main_loop(struct sdl_system system, struct sdl_data data) {
         } while (return_code == 1);
 
         // sleep
-        nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)}, NULL);
+        nanosleep(&(struct timespec){.tv_sec = 0, .tv_nsec = (1000000000 / 60)},
+                  NULL);
     }
     return 0;
 }
@@ -256,14 +330,25 @@ int main(int argc, char** argv) {
 
     TRACE("Initializing");
     return_code = init_SDL(&system);
-    ASSERT(return_code == 0, close_SDL(&system); return -1;, "init_SDL error");
+    ASSERT (return_code == 0, "init_SDL error") {
+        close_SDL(&system);
+        return -1;
+    }
 
     TRACE("Loading media");
     return_code = load_media(&data);
-    ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;, "load_media error");
+    ASSERT (return_code == 0, "load_media error") {
+        free_media(&data);
+        close_SDL(&system);
+        return -1;
+    }
 
     return_code = main_loop(system, data);
-    ASSERT(return_code == 0, free_media(&data); close_SDL(&system); return -1;, "main_loop error");
+    ASSERT (return_code == 0, "main_loop error") {
+        free_media(&data);
+        close_SDL(&system);
+        return -1;
+    }
 
     TRACE("Freeing media");
     free_media(&data);

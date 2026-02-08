@@ -13,9 +13,11 @@ int main(int argc, char** argv) {
     printf("  start=[%p]\n", _embed_lorem_ipsum_txt_start);
     printf("    end=[%p]\n", _embed_lorem_ipsum_txt_end);
     printf("   size=[%lu bytes]\n", _embed_lorem_ipsum_txt_size);
-    printf("----------------------------------------------------------------\n");
+    printf(
+        "----------------------------------------------------------------\n");
     printf("%s", _embed_lorem_ipsum_txt_start);
-    printf("----------------------------------------------------------------\n");
+    printf(
+        "----------------------------------------------------------------\n");
 
     return 0;
 }
