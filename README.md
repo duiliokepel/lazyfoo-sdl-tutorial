@@ -63,7 +63,7 @@ Tutorial Development:
 - [x] SDL Tutorial 13 - Alpha Blending
 - [x] SDL Tutorial 14 - Animated Sprites and VSync
 - [x] SDL Tutorial 15 - Rotation and Flipping
-- [ ] SDL Tutorial 16 - True Type Fonts
+- [x] SDL Tutorial 16 - True Type Fonts
 - [ ] SDL Tutorial 17 - Mouse Events
 - [ ] SDL Tutorial 18 - Key States
 - [ ] SDL Tutorial 19 - Gamepads and Joysticks

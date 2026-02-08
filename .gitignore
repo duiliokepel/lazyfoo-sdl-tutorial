@@ -4,3 +4,7 @@
 /deps/
 /embed/
 /include/
+
+# clandg and bear outputs
+/.cache/
+/compile_commands.json

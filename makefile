@@ -180,6 +180,13 @@ ALL_OBJS += $(14_animated_sprites_OBJS)
 PROGRAMS += $(BIN_DIR)/15_rotation_and_flipping
 ALL_OBJS += $(15_rotation_and_flipping_OBJS)
 
+16_true_type_fonts_OBJS = $(BUILD_DIR)/16_true_type_fonts.o \
+	$(BUILD_DIR)/trace.o $(BUILD_DIR)/assert.o \
+	$(EMBED_DIR)/fonts/NotoSans-Regular.ttf.o
+16_true_type_fonts_LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lm
+PROGRAMS += $(BIN_DIR)/16_true_type_fonts
+ALL_OBJS += $(16_true_type_fonts_OBJS)
+
 ################################################################
 # Master target
 ################################################################
@@ -225,6 +232,8 @@ $(BUILD_DIR)/13_alpha_blending.o: $(EMBED_DIR)/blending_press_w.png.h $(EMBED_DI
 $(BUILD_DIR)/14_animated_sprites.o: $(EMBED_DIR)/SNES_F-Zero_Racers.png.h
 
 $(BUILD_DIR)/15_rotation_and_flipping.o: $(EMBED_DIR)/SNES_F-Zero_Racers.png.h
+
+$(BUILD_DIR)/16_true_type_fonts.o: $(EMBED_DIR)/fonts/NotoSans-Regular.ttf.h
 
 ################################################################
 # Targets Build rules
@@ -297,6 +306,10 @@ $(BIN_DIR)/14_animated_sprites: $(14_animated_sprites_OBJS) | $(BIN_DIR)
 $(BIN_DIR)/15_rotation_and_flipping: $(15_rotation_and_flipping_OBJS) | $(BIN_DIR)
 	@$(call PRINT_RULE)
 	$(CC) $(LDFLAGS) -o $@ $^ $(15_rotation_and_flipping_LIBS)
+
+$(BIN_DIR)/16_true_type_fonts: $(16_true_type_fonts_OBJS) | $(BIN_DIR)
+	@$(call PRINT_RULE)
+	$(CC) $(LDFLAGS) -o $@ $^ $(16_true_type_fonts_LIBS)
 
 ################################################################
 # Generic Build rules
