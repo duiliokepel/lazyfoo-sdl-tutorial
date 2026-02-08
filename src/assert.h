@@ -31,11 +31,11 @@
     } while (0);
 
 #if defined(__GNUC__) || defined(__clang__)
-#define LIKELY(condition) __builtin_expect(!!(condition), 1)
-#define UNLIKELY(condition) __builtin_expect(!!(condition), 0)
+    #define LIKELY(condition) __builtin_expect(!!(condition), 1)
+    #define UNLIKELY(condition) __builtin_expect(!!(condition), 0)
 #else
-#define LIKELY(condition) (condition)
-#define UNLIKELY(condition) (condition)
+    #define LIKELY(condition) (condition)
+    #define UNLIKELY(condition) (condition)
 #endif
 
 int _trace_assert_failed(const char *file, int line, const char *function, const char *expression,
