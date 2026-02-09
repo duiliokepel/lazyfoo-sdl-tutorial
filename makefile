@@ -2,7 +2,7 @@
 .SUFFIXES:
 
 #This specifies targets that are not files
-.PHONY: all clean format format_check compile_db
+.PHONY: all clean format format_check compile_db check_rules
 
 ################################################################
 # Toolchain and flags
@@ -200,7 +200,7 @@ ALL_OBJS += $(16_true_type_fonts_OBJS)
 # Master target
 ################################################################
 
-all: $(COMPILE_DB) $(PROGRAMS) format_check
+all: $(COMPILE_DB) $(PROGRAMS) format_check check_rules
 	@$(call PRINT_RULE)
 
 ################################################################
@@ -367,3 +367,9 @@ format: .clang-format
 format_check: .clang-format
 	@$(call PRINT_RULE)
 	$(CLANG_FORMAT) --dry-run --Werror --style=file $(FMT_FILES) || true
+
+check_rules:
+	@$(call PRINT_RULE)
+	./rule01.sh $(SRC_DIR) 
+
+
