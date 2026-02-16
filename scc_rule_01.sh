@@ -19,30 +19,53 @@ if [ $# -lt 1 ]; then
   exit 2
 fi
 
+# Strategies:
+# - Check for goto using grep
+# - Check for setjmp and longjmp using grep
+# - Check for recursion using cflow
+
 # -R    recursive
 # -n    show line numbers
 # -I    ignore binary files
 # -E    extended regex
 # -H    always show filename
-# -s    suppress "No such file" etc. (optional; remove if you prefer noise)
-grep_flags="-R -n -I -E -H -s --color=always"
+grep_flags="-R -n -I -E -H --color=always"
 pattern_goto='(^|[^A-Za-z0-9_])goto([^A-Za-z0-9_]|$)'
 pattern_jmp='(^|[^A-Za-z0-9_])(sigsetjmp|setjmp|_setjmp|siglongjmp|longjmp|_longjmp)([^A-Za-z0-9_]|$)'
 
 # check 1: goto
 out="$(grep $grep_flags "$pattern_goto" "$@" 2>/dev/null || true)"
 if [ -n "$out" ]; then
-    echo "${bold}${rule_name} ${red_bold}failed${reset}: found 'goto'"
+    echo "${bold}${rule_name} ${red_bold}failed${reset}: found goto"
     echo "$out"
     fail=1
 fi
 
-# check 2: setjmp/longjmp family
+# check 2: setjmp/longjmp
 out="$(grep $grep_flags "$pattern_jmp" "$@" 2>/dev/null || true)"
 if [ -n "$out" ]; then
-    echo "${bold}${rule_name} ${red_bold}failed${reset}: found setjmp/longjmp usage"
+    echo "${bold}${rule_name} ${red_bold}failed${reset}: found setjmp/longjmp"
     echo "$out"
     fail=1
+fi
+
+# check 3: recursion direct or indirect via cflow
+out="$(command -v cflow 2>/dev/null)"
+if [ -z "$out" ]; then
+    echo "${bold}${rule_name}${reset} ${red_bold}warning${reset}: cflow not found; recursion check skipped"
+else
+    c_files="$(find "$@" -type f -name '*.c' -print 2>/dev/null)"
+
+    if [ -n "$c_files" ]; then
+        cflow_out="$(cflow -A -n --no-main $c_files 2>/dev/null)"
+        out="$(echo "$cflow_out" | grep --color=always "\((R)\)\|\((recursive:[^)]*)\)" 2>/dev/null || true)"
+
+        if [ -n "$out" ]; then
+            echo "${bold}${rule_name} ${red_bold}failed${reset}: recursion detected"
+            echo "$out"
+            fail=1
+        fi
+    fi
 fi
 
 # Result
