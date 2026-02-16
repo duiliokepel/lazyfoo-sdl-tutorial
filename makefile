@@ -370,6 +370,14 @@ format_check: .clang-format
 
 check_rules:
 	@$(call PRINT_RULE)
-	./rule01.sh $(SRC_DIR) 
-
+	./scc_rule_01.sh $(SRC_DIR)
+	./scc_rule_02.sh $(SRC_DIR)
+	./scc_rule_03.sh $(SRC_DIR)
+	./scc_rule_04.sh $(SRC_DIR)
+	./scc_rule_05.sh $(SRC_DIR)
+	./scc_rule_06.sh $(SRC_DIR)
+	./scc_rule_07.sh $(SRC_DIR)
+	./scc_rule_08.sh $(SRC_DIR)
+	./scc_rule_09.sh $(SRC_DIR)
+	./scc_rule_10.sh $(SRC_DIR)
 
