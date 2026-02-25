@@ -19,28 +19,18 @@ if [ $# -lt 1 ]; then
     exit 2
 fi
 
-# -R    recursive
-# -n    show line numbers
-# -I    ignore binary files
-# -E    extended regex
-# -H    always show filename
-# -s    suppress "No such file" etc. (optional; remove if you prefer noise)
-grep_flags="-R -n -I -E -H -s --color=always"
-pattern_while='(^|[^A-Za-z0-9_])(while[[:space:]]*\([[:space:]]*(1|true)[[:space:]]*\))'
-pattern_for='(^|[^A-Za-z0-9_])(for[[:space:]]*\([[:space:]]*;[[:space:]]*;[[:space:]]*\))'
+# -r    recursively scan sub-directories
+# -n    print line number with output lines
+# -o    show only the part of the line that matched
+# -I    treat binary files as not matching (ignore)
+# -M    run in multiline mode
+# -s    suppress error messages
+pcre2grep_flags='-r -n -o -I -M -s --color=always'
+pattern_unbounded='(?(DEFINE)(?<P>\((?:[^()]++|(?&P))*\)))(?:\bwhile\s*(?!\(\s*LOOPBOUND\s*(?&P)\s*\)\s*\{)(?&P)\s*\{|\bfor\s*(?!\(\s*(?s:.*?)\s*;\s*LOOPBOUND\s*(?&P)\s*;\s*(?s:.*?)\s*\)\s*\{)(?&P)\s*\{|\}\s*while\s*(?!\(\s*LOOPBOUND\s*(?&P)\s*\)\s*;)(?&P)\s*;)'
 
-# check 1: while (1) / while (true) / do { ... } while (1| true}
-out="$(grep $grep_flags "$pattern_while" "$@" 2>/dev/null || true)"
+out="$(pcre2grep $pcre2grep_flags "$pattern_unbounded" "$@" 2>/dev/null || true)"
 if [ -n "$out" ]; then
-    echo "${bold}${rule_name} ${red_bold}failed${reset}: found while(1)/while(true)"
-    echo "$out"
-    fail=1
-fi
-
-# check 2: for(;;)
-out="$(grep $grep_flags "$pattern_for" "$@" 2>/dev/null || true)"
-if [ -n "$out" ]; then
-    echo "${bold}${rule_name} ${red_bold}failed${reset}: found for(;;)"
+    echo "${bold}${rule_name} ${red_bold}failed${reset}: found unbounded while/for loops"
     echo "$out"
     fail=1
 fi

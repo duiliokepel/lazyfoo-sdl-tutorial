@@ -33,7 +33,12 @@ Automating Power of 10 Rules:
     [x] - Check for goto using grep
     [x] - Check for setjmp and longjmp using grep
     [x] - Check for recursion using cflow
+    [ ] - Caveat: False positive from comments on grep
+    [ ] - Caveat: Macros, function pointers, callbacks
+    [ ] - Caveat: Multi-file / build-flag
 - [ ] Rule 02 - All loops must have a fixed upper-bound.
+    [x] - LOOPBOUND macro implementation
+    [x] - Check for LOOPBOUND macro on loop conditions using pcre2grep
 - [ ] Rule 03 - Do not use dynamic memory allocation after initialization
 - [ ] Rule 04 - No function should be longer than what can be printed on a single sheet of
 paper
