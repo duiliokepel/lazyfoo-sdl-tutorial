@@ -74,7 +74,7 @@ if [ "$fail" -eq 0 ]; then
 else
     echo "${bold}${rule_name}${reset}:"
     echo "${rule_description}"
-    echo "${bold}Rationale:${reset}:"
+    echo "${bold}Rationale${reset}:"
     echo "${rule_rationale}"
 fi
 
